@@ -3,8 +3,6 @@ import { useRouter } from 'next/router';
 import { IconButton } from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
 
-import Layout from '../../../../components/layout'
-
 
 interface CommentData {
   id: number;
