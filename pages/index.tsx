@@ -1,5 +1,35 @@
 import type { NextPage } from 'next'
+import { Card, CardActions, CardContent, Button, Typography } from '@mui/material';
+
 import styles from '../styles/Home.module.css'
+
+const ChannelDataList = [
+  {
+    id: 1,
+    text: "This is channel 1",
+  },
+  {
+    id: 2,
+    text: "This is channel 2",
+  }
+]
+
+interface ChannelData {
+  id: number;
+  text: string;
+}
+
+const ChannelCard = (channelData: ChannelData) => {
+  return (
+    <Card sx={{ minWidth: 225, minHeight: 225 }} className={styles.card}>
+      <CardContent>
+        <Typography variant="h6" >
+          {channelData.text}
+        </Typography>
+      </CardContent>
+  </Card>
+  )
+}
 
 const Home: NextPage = () => {
   return (
@@ -9,6 +39,15 @@ const Home: NextPage = () => {
           {/* Welcome to <a href="https://nextjs.org">Next.js!</a> */}
           Welcome to Pendora!
         </h1>
+
+        <div className={styles.grid}  sx={{marginTop: 40}} mt-12>
+          {/* <ChannelCard /> */}
+          {
+            ChannelDataList.map((channel) => (
+              <ChannelCard key={channel.id} id={channel.id} text={channel.text} />
+            ))
+          }
+        </div>
 
         {/* <div className={styles.grid}>
           <a href="https://nextjs.org/docs" className={styles.card}>

@@ -23,11 +23,11 @@ const TopicDataList = [
   },
   {
     id: 4,
-    text: "This is topic 3",
+    text: "This is topic 4",
   },
   {
     id: 5,
-    text: "This is topic 3",
+    text: "This is topic 5",
   }
 ]
 
@@ -36,7 +36,7 @@ const Channel: NextPage = () => {
   const { channel_id } = router.query
 
   return (
-    <div>
+    <div className="mt-12">
       channel: {channel_id}
       {
         TopicDataList.map((topic) => (

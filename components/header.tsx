@@ -28,7 +28,9 @@ const Header = () => {
           borderColor: 'divider',
         }}>
           <Link href="/" >
-            Pendora
+            <h3>
+              Pendora
+            </h3>
           </Link>
           <Box sx={{ flex: 1 }} />
 
