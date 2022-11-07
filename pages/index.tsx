@@ -43,7 +43,7 @@ const MyChannels = () => {
     router.push(`/channel/${id}`)
   }
   return (
-    <Box sx={{marginTop: 8, paddingTop: 4, width: 800, borderTop: 1, borderColor: "divider"}}>
+    <Box sx={{marginTop: 8, paddingTop: 4, width: 800}}>
       <Box sx={{display: 'flex'}}>
         <Typography variant="h5" >
           My Channels

@@ -34,7 +34,7 @@ const Header = () => {
           </Link>
           <Box sx={{ flex: 1 }} />
 
-          {
+          {/* {
             NavTabs.map(x => {
               return (
                 <Typography variant="subtitle1" key={x.name} sx={{
@@ -44,7 +44,7 @@ const Header = () => {
                 </Typography>
               )
             })
-          }
+          } */}
 
           <Button variant='outlined' onClick={() => {}} > connect </Button>
 
