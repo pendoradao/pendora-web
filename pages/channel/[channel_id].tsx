@@ -1,6 +1,7 @@
 import type { NextPage } from 'next';
 import Link from 'next/link'
 import { useRouter } from 'next/router';
+import { useState, useEffect } from 'react';
 import { Box, Grid, Button, Divider,  Typography } from '@mui/material';
 
 
@@ -50,13 +51,23 @@ const Channel: NextPage = () => {
   const router = useRouter();
   const { channel_id } = router.query
 
+  const [channelData, setChannelData] = useState( {id: 0, text: ''} )
+
+  useEffect(() => {
+    fetch(`/api/channel/${channel_id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setChannelData(data)
+      })
+  }, [])
+
   return (
     <Grid container spacing={2}>
       <Grid item xs={0} sm={4}/>
       <Grid item xs={12} sm={4}>
         <Box sx={{display: 'flex'}}>
           <Typography variant="h4" >
-            channel: {channel_id}
+            {channelData.text}
           </Typography>
           <Box sx={{ flex: 1 }} />
           <Button variant="contained">New Topic</Button>

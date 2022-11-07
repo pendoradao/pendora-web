@@ -1,19 +1,20 @@
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router';
+import { useState, useEffect } from 'react';
 import { Box, Card, CardActions, CardContent, Button, Divider, Typography } from '@mui/material';
 
 import styles from '../styles/Home.module.css'
 
-const ChannelDataList = [
-  {
-    id: 1,
-    text: "This is channel 1",
-  },
-  {
-    id: 2,
-    text: "This is channel 2",
-  }
-]
+// const ChannelDataList = [
+//   {
+//     id: 1,
+//     text: "This is channel 1",
+//   },
+//   {
+//     id: 2,
+//     text: "This is channel 2",
+//   }
+// ]
 
 interface ChannelData {
   id: number;
@@ -42,6 +43,17 @@ const MyChannels = () => {
   const handerClick = (id: number) => {
     router.push(`/channel/${id}`)
   }
+
+  const [channelDataList, setChannelDataList] = useState(Array<{id: number; text: string}>)
+
+  useEffect(() => {
+    fetch('/api/channel')
+      .then((res) => res.json())
+      .then((data) => {
+        setChannelDataList(data.data)
+      })
+  }, [])
+
   return (
     <Box sx={{marginTop: 8, paddingTop: 4, width: 800}}>
       <Box sx={{display: 'flex'}}>
@@ -53,7 +65,7 @@ const MyChannels = () => {
       </Box>
         <div className={styles.grid}>
           {
-            ChannelDataList.map((channel) => (
+            channelDataList.map((channel) => (
               <ChannelCard key={channel.id} id={channel.id} text={channel.text} handerClick={handerClick}/>
             ))
           }
