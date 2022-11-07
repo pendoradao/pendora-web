@@ -2,7 +2,6 @@ import '../styles/globals.css'
 import type { AppProps } from 'next/app'
 
 import Layout from '../components/layout'
-import styles from '../styles/Home.module.css'
 import Head from 'next/head'
 
 function MyApp({ Component, pageProps }: AppProps) {
