@@ -1,0 +1,10 @@
+{
+    "1": "mainnet",
+    "4": "rinkeby",
+    "42": "kovan",
+    "56": "binance",
+    "97": "binance-testnet",
+    "137": "polygon",
+    "420": "goerli",
+    "1337": "dev"
+}

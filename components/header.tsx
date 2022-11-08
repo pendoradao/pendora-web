@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { Toolbar, Button, Box, Typography } from '@mui/material';
 
 import styles from '../styles/Home.module.css'
-
+import Wallet from './wallet';
 
 const NavTabs = [
   {
@@ -34,19 +34,7 @@ const Header = () => {
           </Link>
           <Box sx={{ flex: 1 }} />
 
-          {/* {
-            NavTabs.map(x => {
-              return (
-                <Typography variant="subtitle1" key={x.name} sx={{
-                  marginRight: 4,
-                }}>
-                  <Link href={x.to} >{x.name}</Link>
-                </Typography>
-              )
-            })
-          } */}
-
-          <Button variant='outlined' onClick={() => {}} > connect </Button>
+          <Wallet/>
 
         </Toolbar>
       </Box>
