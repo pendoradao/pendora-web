@@ -17,8 +17,7 @@ export const etherContext = createContext<ethConnectionType>({
 });
 
 export const useWallet = () => {
-  // const { ethereum } = window;
-  // const selectedAddress = window?.ethereum?.selectedAddress;
+  // console.log(window?.ethereum);
   // const [currentAccount, setCurrentAccount] = useState<string | undefined>(toChecksumAddress(ethereum?.selectedAddress));
   const [currentAccount, setCurrentAccount] = useState<string | undefined>(undefined);
   const [currentChain, SetCurrentChain] = useState<string | undefined>(undefined);
@@ -27,7 +26,7 @@ export const useWallet = () => {
   useEffect(() => {
     // @ts-ignore
     const { ethereum } = window;
-    ethereum.on("accountsChanged", ([newAccount]) => {
+    ethereum.on("accountsChanged", ([newAccount]: string[]) => {
       console.log("accountsChanged: ", newAccount);
       setCurrentAccount(toChecksumAddress(newAccount));
     })

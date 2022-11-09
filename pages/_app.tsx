@@ -8,14 +8,12 @@ import { ethConnectionType, useWallet, etherContext } from '../hooks/useeth';
 import '../styles/globals.css'
 
 function MyApp({ Component, pageProps }: AppProps) {
-
-  useEffect(() => {
-    console.log('window.ethereum', window.ethereum);
-  }, [])
+  console.log('rendering app')
+  const ethConnection: ethConnectionType = useWallet();
 
   const PageView = () => {
     return (
-      <etherContext.Provider value={useWallet()}>
+      <etherContext.Provider value={ethConnection}>
         <Layout>
           <Component {...pageProps} />
         </Layout>
