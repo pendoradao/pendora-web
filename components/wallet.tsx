@@ -1,16 +1,14 @@
 import { useContext, useRef, useEffect, useState, KeyboardEvent } from 'react';
+import { useAccount, useConnect, useDisconnect, useEnsName } from 'wagmi'
+import { InjectedConnector } from 'wagmi/connectors/injected'
 
 import { Button, Box, Popper, Grow, ClickAwayListener, MenuItem, MenuList, Paper } from '@mui/material';
-import { connectWallet } from "../lib/eth";
 
-import { etherContext } from '../hooks/useeth';
-
-const WalletConnected = ({ currentAccount }: { currentAccount: string }) => {
+const WalletConnected = ({ currentAccount }: { currentAccount: `0x${string}` }) => {
   const [open, setOpen] = useState(false);
   const anchorRef = useRef<HTMLButtonElement>(null);
   const prevOpen = useRef(open);
-  const { setCurrentAccount } = useContext(etherContext);
-
+  const { disconnect } = useDisconnect()
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
@@ -43,7 +41,7 @@ const WalletConnected = ({ currentAccount }: { currentAccount: string }) => {
   }, [open]);
 
   const Logout = () => {
-    setCurrentAccount && setCurrentAccount('');
+    disconnect()
   }
 
   return (
@@ -95,18 +93,21 @@ const WalletConnected = ({ currentAccount }: { currentAccount: string }) => {
 }
 
 const Wallet = () => {
-  const { currentAccount, setCurrentAccount } = useContext(etherContext);
+  const { address, isConnected } = useAccount()
+  const { connect } = useConnect({
+    connector: new InjectedConnector(),
+  })
 
   const onBtnClick = async () => {
-    await connectWallet(setCurrentAccount);
+    connect()
   }
 
   return (
     <Box sx={{ display: 'inline-block' }}>
       {
-        (currentAccount && setCurrentAccount) ?
-          <WalletConnected currentAccount={currentAccount} /> :
-          <Button variant='contained' onClick={onBtnClick} > connect </Button>
+        (isConnected && address) ?
+          <WalletConnected currentAccount={address} /> :
+          <Button variant='contained' onClick={onBtnClick}> connect </Button>
       }
     </Box>
   )

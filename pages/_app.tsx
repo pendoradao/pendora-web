@@ -1,23 +1,21 @@
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
-import { useEffect, useState } from 'react';
+import { WagmiConfig } from 'wagmi';
 
 import Layout from '../components/layout'
-
-import { ethConnectionType, useWallet, etherContext } from '../hooks/useeth';
+import { client } from '@lib/eth';
 import '../styles/globals.css'
 
 function MyApp({ Component, pageProps }: AppProps) {
   console.log('rendering app')
-  const ethConnection: ethConnectionType = useWallet();
 
   const PageView = () => {
     return (
-      <etherContext.Provider value={ethConnection}>
+      <WagmiConfig client={client}> 
         <Layout>
           <Component {...pageProps} />
         </Layout>
-      </etherContext.Provider>
+      </WagmiConfig>
     )
   }
 

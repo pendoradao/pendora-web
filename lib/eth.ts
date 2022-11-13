@@ -1,6 +1,24 @@
-import { ethers } from "ethers";
+import { ethers, getDefaultProvider } from "ethers";
+import {
+  WagmiConfig,
+  configureChains,
+  chain,
+  createClient,
+} from 'wagmi'
+import { publicProvider } from 'wagmi/providers/public'
 
 import ethChain from "./eth_chain.json";
+
+const { chains, provider, webSocketProvider } = configureChains(
+  [chain.mainnet, chain.polygon],
+  [publicProvider()],
+)
+
+const client = createClient({
+  autoConnect: false,
+  provider,
+  webSocketProvider,
+})
 
 const toChecksumAddress = (address: string) => {
   return ethers.utils.getAddress(address);
@@ -24,17 +42,22 @@ const connectWallet = async (handlerSetAccout: ((account: string)=>void) | undef
   }
 
   const accounts = await provider.send( 'eth_requestAccounts', []);
-  // console.log(accounts);
+  console.log(accounts);
   const account = accounts[0];
   console.log(`account:  ${account}`);
+
+  // connector: new InjectedConnector(),
 
   if (handlerSetAccout) {
     handlerSetAccout(toChecksumAddress(account));
   }
 }
 
+
 export {
   toChecksumAddress,
   getNetworkName,
-  connectWallet
+  connectWallet,
+  client,
 }
+

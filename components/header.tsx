@@ -33,9 +33,7 @@ const Header = () => {
             </h3>
           </Link>
           <Box sx={{ flex: 1 }} />
-
           <Wallet/>
-
         </Toolbar>
       </Box>
     </header>
