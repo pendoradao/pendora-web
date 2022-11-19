@@ -92,7 +92,7 @@ const WalletConnected = ({ currentAccount }: { currentAccount: `0x${string}` }) 
   )
 }
 
-const Wallet = () => {
+const ProfileButton = () => {
   const { address, isConnected } = useAccount()
   const { connect } = useConnect({
     connector: new InjectedConnector(),
@@ -103,14 +103,14 @@ const Wallet = () => {
   }
 
   return (
-    <Box sx={{ display: 'inline-block' }}>
+    <div sx={{ display: 'inline-block' }}>
       {
         (isConnected && address) ?
           <WalletConnected currentAccount={address} /> :
           <Button variant='contained' onClick={onBtnClick}> connect </Button>
       }
-    </Box>
+    </div>
   )
 }
 
-export default Wallet;
+export default ProfileButton;

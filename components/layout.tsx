@@ -1,11 +1,11 @@
 import { ReactNode } from 'react'
 import Footer from './footer'
-import Header from './header'
+import Narbar from './navbar'
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (
     <>
-      <Header />
+      <Narbar />
       <div className="min-h-screen" style={{minHeight: '100vh', marginTop: 12}}>
         {/* <Alert preview={preview} /> */}
         <main>{children}</main>
