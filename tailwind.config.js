@@ -3,7 +3,7 @@ const defaultTheme = require('tailwindcss/defaultTheme');
 const colors = require('tailwindcss/colors');
 
 module.exports = {
-  content: ['./{pages,components}/**/*.{ts,tsx}'],
+  content: ['./src/**/*.{ts,tsx}'],
   darkMode: 'class',
   theme: {
     screens: {
@@ -16,7 +16,7 @@ module.exports = {
         green: colors.emerald,
         purple: colors.violet,
         yellow: colors.yellow,
-        brand: colors.violet
+        brand: colors.indigo
       }
     }
   },
