@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import type { FC } from 'react';
 
 import { Question, User, Post } from '@types';
@@ -14,8 +15,11 @@ const SinglePublication: FC<Post> = ({
   userName,
   userAvatar
 }) => {
+  const { push } = useRouter();
   return (
-    <div className={styles.single_publication}>
+    <div className={styles.single_publication} onClick={
+      ()=>{push(`/q/${questionId}`)}}
+      >
       <div className={styles.single_publication__title}>
         <span>
         {questionTitle}

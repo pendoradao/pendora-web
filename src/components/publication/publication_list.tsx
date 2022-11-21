@@ -3,13 +3,18 @@ import { useState, useEffect } from 'react'
 import SinglePublication  from './single_publication';
 import { Post } from '@types';
 
-export const PublicationList = () => {
+interface PublicationListProps {
+  type: string;
+}
+
+export const PublicationList = (publicationListProps: PublicationListProps) => {
+  const {type } = publicationListProps;
   const [data, setData] = useState(null)
   const [isLoading, setLoading] = useState(false)
 
   useEffect(() => {
     setLoading(true)
-    fetch('/api/feed')
+    fetch('/api/feed?type=' + type)
       .then((res) => res.json())
       .then((data) => {
         setData(data.data)
@@ -20,7 +25,9 @@ export const PublicationList = () => {
   return (
     <div>
       {isLoading && <p>Loading...</p>}
-      {data && data.map((post: Post) => <SinglePublication {...post} />)}
+      {
+        data ? data?.map((post: Post) => <SinglePublication {...post} />) : null
+      }
     </div>
   );
 };
