@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router';
+import Image from 'next/image';
 import type { FC } from 'react';
 
 import { Question, User, Post } from '@types';
@@ -18,8 +19,7 @@ const SinglePublication: FC<Post> = ({
   const { push } = useRouter();
   return (
     <div className={styles.single_publication} onClick={
-      ()=>{push(`/q/${questionId}`)}}
-      >
+      ()=>{push(`/q/${questionId}/a/${answerId}`)}} >
       <div className={styles.single_publication__title}>
         <span>
         {questionTitle}
@@ -27,7 +27,7 @@ const SinglePublication: FC<Post> = ({
       </div>
       <div className={styles.single_publication__header}>
         <div className={styles.single_publication__header__avatar}>
-          <img src={userAvatar} alt="avatar" />
+          <Image src={userAvatar} alt="avatar" width={48} height={48}/>
         </div>
         <div className={styles.single_publication__header__info}>
           <div className={styles.single_publication__header__info__name}>
@@ -46,8 +46,8 @@ const SinglePublication: FC<Post> = ({
         </div>
         {
           answerImage && (
-            <div className={styles.single_publication__content__image}>
-              <img src={answerImage} alt="image" />
+            <div className={styles.single_publication__content__image} >
+              <Image src={answerImage} alt="image" width={400} height={400} style={{width: '100%', height:"auto"}}/>
             </div>
           )
         }

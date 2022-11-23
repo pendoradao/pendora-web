@@ -9,7 +9,7 @@ interface PublicationListProps {
 
 export const PublicationList = (publicationListProps: PublicationListProps) => {
   const {type } = publicationListProps;
-  const [data, setData] = useState(null)
+  const [data, setData] = useState([])
   const [isLoading, setLoading] = useState(false)
 
   useEffect(() => {
@@ -26,7 +26,7 @@ export const PublicationList = (publicationListProps: PublicationListProps) => {
     <div>
       {isLoading && <p>Loading...</p>}
       {
-        data ? data?.map((post: Post) => <SinglePublication {...post} />) : null
+        data ? data?.map((post: Post) => <SinglePublication key={post.answerId} {...post} />) : null
       }
     </div>
   );
