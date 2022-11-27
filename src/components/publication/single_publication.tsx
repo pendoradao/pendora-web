@@ -14,52 +14,61 @@ const SinglePublication: FC<Post> = ({
   answerImage,
   userId,
   userName,
-  userAvatar
+  userAvatar,
 }) => {
   const { push } = useRouter();
+  const handlerGoAnswer = () => {
+    push(`/q/${questionId}/a/${answerId}`);
+  };
+  const handlerGoQuestion = () => {
+    push(`/q/${questionId}`);
+  };
+  const handlerGoUser = () => {
+    push(`/u/${userId}`);
+  };
+
   return (
-    <div className={styles.single_publication} onClick={
-      ()=>{push(`/q/${questionId}/a/${answerId}`)}} >
-      <div className={styles.single_publication__title}>
+    <div className={styles.single_publication}>
+      <div className={styles.title} onClick={handlerGoQuestion} >
         <span>
         {questionTitle}
         </span>
       </div>
-      <div className={styles.single_publication__header}>
-        <div className={styles.single_publication__header__avatar}>
+      <div className={styles.header} onClick={handlerGoUser} >
+        <div className={styles.header__avatar}>
           <Image src={userAvatar} alt="avatar" width={48} height={48}/>
         </div>
-        <div className={styles.single_publication__header__info}>
-          <div className={styles.single_publication__header__info__name}>
+        <div className={styles.header__info}>
+          <div className={styles.header__info__name}>
             <span>{userName}</span>
           </div>
-          <div className={styles.single_publication__header__info__date}>
+          <div className={styles.header__info__date}>
             <span>@0xzelda.lens</span>
           </div>
         </div>
       </div>
-      <div className={styles.single_publication__content}>
-        <div className={styles.single_publication__content__text}>
+      <div className={styles.content} onClick={handlerGoAnswer}>
+        <div className={styles.content__text}>
           <span>
             {answerContent}
           </span>
         </div>
         {
           answerImage && (
-            <div className={styles.single_publication__content__image} >
+            <div className={styles.content__image} >
               <Image src={answerImage} alt="image" width={400} height={400} style={{width: '100%', height:"auto"}}/>
             </div>
           )
         }
       </div>
-      <div className={styles.single_publication__footer}>
-        <div className={styles.single_publication__footer__likes}>
+      {/* <div className={styles.footer}>
+        <div className={styles.footer__likes}>
           <span>100 likes</span>
         </div>
-        <div className={styles.single_publication__footer__comments}>
+        <div className={styles.footer__comments}>
           <span>100 comments</span>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

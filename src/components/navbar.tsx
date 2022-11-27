@@ -54,7 +54,7 @@ const Navbar = () => {
   const { pathname } = useRouter();
 
   return (
-    <Disclosure as='header' className='sticky top-0 w-full bg-white border-b'>
+    <Disclosure as='header' className='sticky top-0 w-full bg-white border-b z-10'>
       {({ open }) => (
         <>
           <div className="flex justify-between items-center h-14 md:px-64 px-4">
