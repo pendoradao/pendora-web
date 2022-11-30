@@ -1,12 +1,46 @@
 import { useRouter } from 'next/router';
 import Image from 'next/image';
-import type { FC } from 'react';
+import { FC, useState } from 'react';
+import clsx from 'clsx';
+import { HeartIcon, ChatAltIcon } from '@heroicons/react/outline';
+import { HeartIcon as HeartIconSolid } from '@heroicons/react/solid';
 
+import { Tooltip } from '@ui';
 import { Question, User, Post } from '@types';
 import styles from '@/styles/publication.module.css';
 
+interface PostContext {
+  showQuestion?: boolean;
+  clickAble?: boolean;
+}
 
-const SinglePublication: FC<Post> = ({
+const Actions = () => {
+  const [liked, setLiked] = useState(0);
+
+  return (
+    <div className={styles.footer}>
+    <span className="flex items-center justify-center space-x-1">
+      <span className="p-1.5 rounded-full hover:bg-zinc-300 hover:bg-opacity-20">
+        <Tooltip placement="top" content={liked ? 'Unlike' : 'Like'} withDelay>
+          {liked ? <HeartIconSolid className="w-[17px] sm:w-[20px]" /> : <HeartIcon className="w-[17px] sm:w-[20px]" />}
+        </Tooltip>
+      </span>
+      <span className="text-[11px] sm:text-xs">12.5</span>
+    </span>
+    <span className="flex items-center justify-center space-x-1">
+      <span className="p-1.5 rounded-full hover:bg-zinc-300 hover:bg-opacity-20">
+        <Tooltip placement="top" content='comment' withDelay>
+          <ChatAltIcon className="w-[17px] sm:w-[20px]" />
+        </Tooltip>
+      </span>
+      <span className="text-[11px] sm:text-xs">5</span>
+    </span>
+  </div>
+  )
+}
+
+
+const SinglePublication: FC<Post & PostContext> = ({
   questionId,
   questionTitle,
   answerId,
@@ -15,10 +49,12 @@ const SinglePublication: FC<Post> = ({
   userId,
   userName,
   userAvatar,
+  showQuestion,
+  clickAble
 }) => {
   const { push } = useRouter();
   const handlerGoAnswer = () => {
-    push(`/q/${questionId}/a/${answerId}`);
+    clickAble && push(`/q/${questionId}/a/${answerId}`);
   };
   const handlerGoQuestion = () => {
     push(`/q/${questionId}`);
@@ -27,16 +63,20 @@ const SinglePublication: FC<Post> = ({
     push(`/u/${userId}`);
   };
 
+  const [liked, setLiked] = useState(0);
+
   return (
     <div className={styles.single_publication}>
-      <div className={styles.title} onClick={handlerGoQuestion} >
-        <span>
-        {questionTitle}
-        </span>
-      </div>
+      {showQuestion && questionId && (
+        <div className={styles.title} onClick={handlerGoAnswer} >
+          <span>
+            {questionTitle}
+          </span>
+        </div>
+      )}
       <div className={styles.header} onClick={handlerGoUser} >
         <div className={styles.header__avatar}>
-          <Image src={userAvatar} alt="avatar" width={48} height={48}/>
+          <Image src={userAvatar} alt="avatar" width={48} height={48} />
         </div>
         <div className={styles.header__info}>
           <div className={styles.header__info__name}>
@@ -47,7 +87,7 @@ const SinglePublication: FC<Post> = ({
           </div>
         </div>
       </div>
-      <div className={styles.content} onClick={handlerGoAnswer}>
+      <div className={clsx(styles.content, clickAble ? 'cursor-pointer': '')} onClick={handlerGoAnswer}>
         <div className={styles.content__text}>
           <span>
             {answerContent}
@@ -56,22 +96,15 @@ const SinglePublication: FC<Post> = ({
         {
           answerImage && (
             <div className={styles.content__image} >
-              <Image src={answerImage} alt="image" width={400} height={400} style={{width: '100%', height:"auto"}}/>
+              <Image src={answerImage} alt="image" width={400} height={400} style={{ width: '100%', height: "auto" }} />
             </div>
           )
         }
       </div>
-      {/* <div className={styles.footer}>
-        <div className={styles.footer__likes}>
-          <span>100 likes</span>
-        </div>
-        <div className={styles.footer__comments}>
-          <span>100 comments</span>
-        </div>
-      </div> */}
+      <Actions />
     </div>
   );
 };
 
-  
+
 export default SinglePublication;

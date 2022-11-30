@@ -56,7 +56,7 @@ export const AnswerList = (answerListProps: AnswerListProps) => {
         }
       </div>
       {
-        data ? data?.map((post: Post) => <SinglePublication key={post.answerId} {...post} />) : null
+        data ? data?.map((post: Post) => <SinglePublication key={post.answerId} {...post} showQuestion={false} clickAble={false}/>) : null
       }
     </div>
   );

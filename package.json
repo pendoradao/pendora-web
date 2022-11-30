@@ -11,6 +11,7 @@
   "dependencies": {
     "@headlessui/react": "^1.7.4",
     "@heroicons/react": "^1.0.6",
+    "@tippyjs/react": "^4.2.6",
     "ethers": "^5.7.2",
     "next": "13.0.0",
     "react": "18.2.0",

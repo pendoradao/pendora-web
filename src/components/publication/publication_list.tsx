@@ -26,7 +26,7 @@ export const PublicationList = (publicationListProps: PublicationListProps) => {
     <div>
       {isLoading && <p>Loading...</p>}
       {
-        data ? data?.map((post: Post) => <SinglePublication key={post.answerId} {...post} />) : null
+        data ? data?.map((post: Post) => <SinglePublication key={post.answerId} {...post} showQuestion={true} clickAble={true}/>) : null
       }
     </div>
   );
