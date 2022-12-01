@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { Disclosure } from '@headlessui/react';
 import { MenuIcon, XIcon } from '@heroicons/react/outline';
 
+import { Button } from '@ui';
 import ProfileButton from './profile_button';
 
 const NavButton = ({ open }: { open: boolean }) => {
@@ -51,7 +52,7 @@ const NavItems = () => {
 }
 
 const Navbar = () => {
-  const { pathname } = useRouter();
+  const { pathname, push } = useRouter();
 
   return (
     <Disclosure as='header' className='sticky top-0 w-full bg-white border-b z-10'>
@@ -70,6 +71,9 @@ const Navbar = () => {
               </div>
             </div>
             <div className='flex-1'></div>
+            <div className="flex gap-4 items-center mr-4">
+              <Button outline >Ask a Question</Button>
+            </div>
             <div className="flex gap-4 items-center">
               <ProfileButton />
             </div>
