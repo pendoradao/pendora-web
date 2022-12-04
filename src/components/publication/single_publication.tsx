@@ -6,7 +6,7 @@ import { HeartIcon, ChatAltIcon } from '@heroicons/react/outline';
 import { HeartIcon as HeartIconSolid } from '@heroicons/react/solid';
 
 import { Tooltip } from '@ui';
-import { Question, User, Post } from '@types';
+import { Question, Profile, Post } from '@types';
 import styles from '@/styles/publication.module.css';
 
 interface PostContext {
@@ -46,7 +46,7 @@ const SinglePublication: FC<Post & PostContext> = ({
   answerId,
   answerContent,
   answerImage,
-  userId,
+  profileId,
   userName,
   userAvatar,
   showQuestion,
@@ -60,7 +60,7 @@ const SinglePublication: FC<Post & PostContext> = ({
     push(`/q/${questionId}`);
   };
   const handlerGoUser = () => {
-    push(`/u/${userId}`);
+    push(`/u/${profileId}`);
   };
 
   const [liked, setLiked] = useState(0);
