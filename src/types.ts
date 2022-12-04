@@ -2,7 +2,7 @@ export interface Question {
   id: number;
   title: string;
   content: string;
-  userId: number;
+  profileId: string;
 }
 
 export interface Answer {
@@ -10,13 +10,7 @@ export interface Answer {
   content: string;
   image?: string;
   questionId: number;
-  userId: number;
-}
-
-export interface User {
-  id: number;
-  name: string;
-  avatar: string;
+  profileId: string;
 }
 
 export interface Post {
@@ -25,7 +19,22 @@ export interface Post {
   answerId: number;
   answerContent: string;
   answerImage?: string;
-  userId: number;
+  profileId: string;
   userName: string;
   userAvatar: string;
+}
+
+export interface Profile {
+  id: string;
+  name: string;
+  bio: string;
+  handle: string;
+  avatarUrl: string;
+}
+
+export interface Publication {
+  id: number;
+  metadata: {
+    content: string;
+  }
 }
