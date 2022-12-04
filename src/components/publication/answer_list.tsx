@@ -8,15 +8,15 @@ interface AnswerListProps {
   answerId?: number;
 }
 
-interface QuestionCard {
-  id: number;
-  title: string;
-  content: string;
-  userId: number;
-}
+// interface QuestionCard {
+//   id: number;
+//   title: string;
+//   content: string;
+//   userId: number;
+// }
 
-const QuestionCard =  (questionCardProps: QuestionCard) => {
-  const { id, title, content, userId } = questionCardProps;
+const QuestionCard =  (questionCardProps: Question) => {
+  const { id, title, content } = questionCardProps;
   return (
     <div className='mb-8'>
       <div className='text-2xl font-semibold'>
