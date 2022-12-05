@@ -1,32 +1,16 @@
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/router';
+import { PencilIcon } from '@heroicons/react/solid';
 
-import SinglePublication from './single_publication';
 import { Question, Post } from '@types';
+import { Button } from '@ui';
+import AnswerDialog from '@components/answer_dialog';
+import SinglePublication from './single_publication';
+import QuestionCard from './question_card';
 
 interface AnswerListProps {
   questionId: number;
   answerId?: number;
-}
-
-// interface QuestionCard {
-//   id: number;
-//   title: string;
-//   content: string;
-//   userId: number;
-// }
-
-const QuestionCard =  (questionCardProps: Question) => {
-  const { id, title, content } = questionCardProps;
-  return (
-    <div className='mb-8'>
-      <div className='text-2xl font-semibold'>
-        <h1>{title}</h1>
-      </div>
-      <div className='mt-4'>
-        <span>{content}</span>
-      </div>
-    </div>
-  );
 }
 
 export const AnswerList = (answerListProps: AnswerListProps) => {
@@ -34,6 +18,7 @@ export const AnswerList = (answerListProps: AnswerListProps) => {
   const [data, setData] = useState([])
   const [question, setQuestion] = useState({} as Question)
   const [isLoading, setLoading] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
   const url = answerId ? `/api/a?questionId=${questionId}&answerId=${answerId}` : `/api/a?questionId=${questionId}`
 
   useEffect(() => {
@@ -52,11 +37,19 @@ export const AnswerList = (answerListProps: AnswerListProps) => {
       {isLoading && <p>Loading...</p>}
       <div>
         {
-          question?.id ? <QuestionCard {...question} /> : <></>
+          question?.id ? (
+            <>
+              <QuestionCard {...question} />
+              <div className='flex'>
+                <Button icon={<PencilIcon width='1.2em' />} outline onClick={()=>setIsOpen(true)}> Answer</Button>
+                <AnswerDialog isOpen={isOpen} setIsOpen={setIsOpen} question={question}/>
+              </div>
+            </>
+          ) : <></>
         }
       </div>
       {
-        data ? data?.map((post: Post) => <SinglePublication key={post.answerId} {...post} showQuestion={false} clickAble={false}/>) : null
+        data ? data?.map((post: Post) => <SinglePublication key={post.answerId} {...post} showQuestion={false} clickAble={false} />) : null
       }
     </div>
   );
