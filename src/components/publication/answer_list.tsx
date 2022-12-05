@@ -4,6 +4,7 @@ import { PencilIcon } from '@heroicons/react/solid';
 
 import { Question, Post } from '@types';
 import { Button } from '@ui';
+import AnswerDialog from '@components/answer_dialog';
 import SinglePublication from './single_publication';
 import QuestionCard from './question_card';
 
@@ -17,6 +18,7 @@ export const AnswerList = (answerListProps: AnswerListProps) => {
   const [data, setData] = useState([])
   const [question, setQuestion] = useState({} as Question)
   const [isLoading, setLoading] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
   const url = answerId ? `/api/a?questionId=${questionId}&answerId=${answerId}` : `/api/a?questionId=${questionId}`
 
   useEffect(() => {
@@ -30,12 +32,6 @@ export const AnswerList = (answerListProps: AnswerListProps) => {
       })
   }, [])
 
-  const { push } = useRouter();
-
-  const handleGoAnswer = () => {
-    push(`/edit/a?q_id=${questionId}`);
-  }
-
   return (
     <div>
       {isLoading && <p>Loading...</p>}
@@ -45,7 +41,8 @@ export const AnswerList = (answerListProps: AnswerListProps) => {
             <>
               <QuestionCard {...question} />
               <div className='flex'>
-                <Button icon={<PencilIcon width='1.2em' />} outline onClick={handleGoAnswer}> Answer</Button>
+                <Button icon={<PencilIcon width='1.2em' />} outline onClick={()=>setIsOpen(true)}> Answer</Button>
+                <AnswerDialog isOpen={isOpen} setIsOpen={setIsOpen} question={question}/>
               </div>
             </>
           ) : <></>
