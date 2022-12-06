@@ -8,7 +8,7 @@ import {
 import { publicProvider } from 'wagmi/providers/public'
 
 const { chains, provider, webSocketProvider } = configureChains(
-  [chain.mainnet, chain.polygon],
+  [chain.polygon, chain.polygonMumbai],
   [publicProvider()],
 )
 
@@ -21,4 +21,3 @@ const client = createClient({
 export {
   client,
 }
-
