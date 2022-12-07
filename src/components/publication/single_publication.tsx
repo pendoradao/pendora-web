@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import { HeartIcon, ChatAltIcon } from '@heroicons/react/outline';
 import { HeartIcon as HeartIconSolid } from '@heroicons/react/solid';
 
-import { Tooltip } from '@ui';
+import { Tooltip } from '@components/ui';
 import { Question, Profile, Post } from '@types';
 import styles from '@/styles/publication.module.css';
 

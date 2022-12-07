@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { Disclosure } from '@headlessui/react';
 import { MenuIcon, XIcon } from '@heroicons/react/outline';
 
-import { Button } from '@ui';
+import { Button } from '@components/ui';
 import ProfileButton from './profile_button';
 
 const NavButton = ({ open }: { open: boolean }) => {
@@ -25,10 +25,10 @@ const NavItems = () => {
       name: 'Home',
       to: '/',
     },
-    {
-      name: 'Explore',
-      to: '/explore',
-    },
+    // {
+    //   name: 'Explore',
+    //   to: '/explore',
+    // },
     {
       name: 'Following',
       to: '/following',

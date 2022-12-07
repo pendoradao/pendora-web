@@ -3,8 +3,8 @@ import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { gql } from '@apollo/client'
 
-import client from '@lib/request';
-import { GridLayout } from '@ui';
+import { client } from '@lib/request';
+import { GridLayout } from '@components/ui';
 import { Profile, Publication } from '@types';
 
 export const getProfile = gql`
