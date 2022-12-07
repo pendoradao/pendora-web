@@ -2,7 +2,7 @@ import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 
-import { GridLayout, GridItemMain } from '@ui';
+import { GridLayout, GridItemMain } from '@components/ui';
 import { AnswerList } from '@components/publication/answer_list';
 
 const AnswerPage: NextPage = () => {

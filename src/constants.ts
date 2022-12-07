@@ -1,3 +1,3 @@
-// export const API_URL = 'https://api.pendora.xyz';
-// export const API_URL = 'https://api.lens.dev';
+export const APP_NAME = "Pendora";
+
 export const API_URL = "https://api-mumbai.lens.dev";

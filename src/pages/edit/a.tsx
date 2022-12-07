@@ -1,7 +1,7 @@
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
 
-import { GridLayout, GridItemMain } from '@ui';
+import { GridLayout, GridItemMain } from '@components/ui';
 import QuestionCard from '@components/publication/question_card';
 
 

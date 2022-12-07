@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { PencilIcon } from '@heroicons/react/solid';
 
 import { Question, Post } from '@types';
-import { Button } from '@ui';
+import { Button } from '@components/ui';
 import AnswerDialog from '@components/answer_dialog';
 import SinglePublication from './single_publication';
 import QuestionCard from './question_card';

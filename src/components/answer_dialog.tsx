@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Dialog } from '@headlessui/react'
 
 import { Question } from '@types';
-import { Button } from '@ui';
+import { Button } from '@components/ui';
 
 interface AnswerDialogProps {
   isOpen: boolean;

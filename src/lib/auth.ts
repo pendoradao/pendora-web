@@ -43,11 +43,10 @@ export const getChallengeText = async (address: string) => {
 
 export function useLogin(auth: IAuth) {
   const { address, challengeText, handleGetToken } = auth
-  console.log('challengeText', challengeText)
   const { data, isError, isLoading, isSuccess, signMessage } = useSignMessage({
     message: challengeText,
     async onSuccess(data) {
-      console.log('Success', data)
+      // console.log('Success', data)
       let signature = data
       const authData = await client.mutate({
         mutation: authenticate,
@@ -57,7 +56,7 @@ export function useLogin(auth: IAuth) {
       })
       /* if user authentication is successful, you will receive an accessToken and refreshToken */
       const { data: { authenticate: { accessToken } } } = authData
-      console.log({ accessToken })
+      // console.log({ accessToken })
       handleGetToken(accessToken)
     },
   })

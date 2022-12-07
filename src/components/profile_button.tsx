@@ -2,11 +2,13 @@ import { useContext, useRef, useEffect, useState } from 'react';
 import { useAccount, useConnect, useDisconnect, useEnsName } from 'wagmi'
 import { InjectedConnector } from 'wagmi/connectors/injected'
 
-import { Button, Menu } from '@ui';
+import { Button, Menu } from '@components/ui';
 import { getChallengeText, useLogin } from '@lib/auth';
+import { UserContext } from '@context/app';
 
 const WalletConnected = ({ currentAccount }: { currentAccount: `0x${string}` }) => {
   const { disconnect } = useDisconnect()
+  const { setToken }  = useContext(UserContext)
 
   const menuItems = [
     [
@@ -22,12 +24,13 @@ const WalletConnected = ({ currentAccount }: { currentAccount: `0x${string}` }) 
     [
       {
         label: 'Logout',
-        onClick: () => disconnect(),
+        onClick: () => Logout(),
       }
     ]
   ]
 
   const Logout = () => {
+    setToken && setToken('')
     disconnect()
   }
 
@@ -40,12 +43,12 @@ const WalletConnected = ({ currentAccount }: { currentAccount: `0x${string}` }) 
 
 const ProfileButton = () => {
   const { address, isConnected } = useAccount()
-  const [token, setToken] = useState<string | null>('')
+  const  { token, setToken }  = useContext(UserContext)
   const [challengeText, setChallengeText] = useState<string>('')
   const { login } = useLogin({
     address: address,
     challengeText: challengeText, 
-    handleGetToken: (token: string) => setToken(token)
+    handleGetToken: (token: string) => {setToken && setToken(token)}
   })
 
   useEffect(() => {
