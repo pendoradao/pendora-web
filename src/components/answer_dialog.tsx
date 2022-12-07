@@ -1,8 +1,5 @@
-import { useState } from 'react'
-import { Dialog } from '@headlessui/react'
-
+import { Button, Modal, Textarea } from '@components/ui';
 import { Question } from '@types';
-import { Button } from '@components/ui';
 
 interface AnswerDialogProps {
   isOpen: boolean;
@@ -17,27 +14,16 @@ function AnswerDialog(answerDialogProps: AnswerDialogProps) {
   }
 
   return (
-    <Dialog as="div" className="absolute z-10" open={isOpen} onClose={() => setIsOpen(false)}>
-      <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
-      <div className="fixed inset-0 flex items-center justify-center">
-        <Dialog.Panel className="mx-auto bg-white w-full lg:w-2/5  p-4 mx-2">
-          <Dialog.Title className="text-xl font-medium">{question.title}</Dialog.Title>
-          <Dialog.Description>
-            {question.content}
-          </Dialog.Description>
-
-          <div className='mt-4'>
-            <textarea rows={25} className='w-full border border-zinc-300 disabled:bg-gray-500 disabled:bg-opacity-20 disabled:opacity-60 focus:border-brand-500 focus:ring-brand-400'></textarea>
-          </div>
-
-          <div className='flex gap-2 mt-4'>
-            <div className='grow'></div>
-            <Button onClick={() => setIsOpen(false)} outline>Cancel</Button>
-            <Button onClick={PostAnswer}>Post</Button>
-          </div>
-        </Dialog.Panel>
+    <Modal isOpen={isOpen} setIsOpen={setIsOpen} title={question.title} content={question.content} className="w-full lg:w-2/5">
+      <div className='mt-4'>
+        <Textarea rows={25} placeholder={'My opinion is ...'}/>
       </div>
-    </Dialog>
+      <div className='flex gap-2 mt-4'>
+        <div className='grow'></div>
+        <Button onClick={() => setIsOpen(false)} outline>Cancel</Button>
+        <Button onClick={PostAnswer}>Post</Button>
+      </div>
+    </Modal>
   )
 }
 
