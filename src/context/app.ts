@@ -1,4 +1,4 @@
-import { useContext, createContext } from "react";
+import { createContext } from "react";
 
 export interface IUserContext {
   token?: string;
