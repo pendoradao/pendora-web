@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/router';
 import { PencilIcon } from '@heroicons/react/solid';
 
 import { Question, Post } from '@types';

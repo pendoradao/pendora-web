@@ -63,6 +63,7 @@ export function useLogin(auth: IAuth) {
   const login = signMessage
 
   return {
-    login
+    login,
+    isLoading
   }
 }
