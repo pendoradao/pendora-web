@@ -27,9 +27,9 @@ export interface Post {
 export interface Profile {
   id: string;
   name: string;
-  bio: string;
+  bio?: string;
   handle: string;
-  avatarUrl: string;
+  avatarUrl?: string;
 }
 
 export interface Publication {
