@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import Image from 'next/image'
 import { Button, Modal } from '@components/ui';
 import { useAccount,} from 'wagmi'
 
@@ -19,7 +20,7 @@ function MyProfilesDialog({isOpen, setIsOpen}: IMyProfilesDialog) {
     if(isOpen && address) {
       setLoading(true)
       // test address: 0x6C77a5a88C0AE712BAeABE12FeA81532060dcBf5
-      getProfilesByOwnedBy(address).then((profiles) => {
+      getProfilesByOwnedBy("0x6C77a5a88C0AE712BAeABE12FeA81532060dcBf5").then((profiles) => {
         setItem(profiles.items)
         console.log('profiles', profiles)
         setLoading(false)
@@ -32,8 +33,10 @@ function MyProfilesDialog({isOpen, setIsOpen}: IMyProfilesDialog) {
         {
           items.map((item) => {
             return (
-            <div className='flex items-center cursor-pointer border px-4 py-2 mx-auto'>
-              <img src={item.avatarUrl} className="w-10 h-10 rounded-full" />
+            <div key={item.id} className='flex items-center cursor-pointer px-4 py-2 mx-auto'>
+              <div className='w-12 h-12 relative'>
+                <Image src={item.avatarUrl || ""} alt="" fill className="rounded-full" />
+              </div>
               <span className='ml-2'>
                 {item.name}
               </span>

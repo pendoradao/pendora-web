@@ -79,7 +79,7 @@ const ProfileButton = () => {
         ) :
         <Button onClick={() => connect()} loading={isConnecting}> Connect </Button>
       }
-      <MyProfilesDialog isOpen={isOpen} setIsOpen={setIsOpen} address={address}/>
+      <MyProfilesDialog isOpen={isOpen} setIsOpen={setIsOpen}/>
     </div>
   )
 }
