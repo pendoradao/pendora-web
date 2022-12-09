@@ -2,14 +2,22 @@ import { useContext, useRef, useEffect, useState } from 'react';
 import { useAccount, useConnect, useDisconnect, useEnsName } from 'wagmi'
 import { InjectedConnector } from 'wagmi/connectors/injected'
 
-import { Button, Menu } from '@components/ui';
+import { Avatar, Button, Menu } from '@components/ui';
 import MyProfilesDialog from '@components/profile/my_profiles';
 import { getChallengeText, useLogin } from '@lib/auth';
 import { UserContext } from '@context/app';
+import { Profile } from '@types'
 
-const WalletConnected = ({ currentAccount }: { currentAccount: `0x${string}` }) => {
+interface IProfileButton {
+  // profile: Profile;
+  handleOpenMyProfile: () => void;
+}
+
+const WalletConnected = (profileButtonProps: IProfileButton) => {
+  const { address } = useAccount()
   const { disconnect } = useDisconnect()
   const { setToken }  = useContext(UserContext)
+  const { handleOpenMyProfile } = profileButtonProps
 
   const menuItems = [
     [
@@ -18,8 +26,8 @@ const WalletConnected = ({ currentAccount }: { currentAccount: `0x${string}` }) 
         onClick: () => console.log('Profile'),
       },
       {
-        label: 'Dashboard',
-        onClick: () => console.log('Dashboard'),
+        label: 'Switch Lens Account',
+        onClick: handleOpenMyProfile,
       }
     ],
     [
@@ -37,14 +45,14 @@ const WalletConnected = ({ currentAccount }: { currentAccount: `0x${string}` }) 
 
   return (
     <Menu items={menuItems}>
-      {`${currentAccount.slice(0, 5)}...${currentAccount.slice(38)}`}
+      {address && `${address.slice(0, 5)}...${address.slice(38)}`}
     </Menu>
   )
 }
 
 const ProfileButton = () => {
   const { address, isConnected, isConnecting } = useAccount()
-  const  { token, setToken }  = useContext(UserContext)
+  const  { token, setToken, profile }  = useContext(UserContext)
   const [challengeText, setChallengeText] = useState<string>('')
   const [isOpen, setIsOpen] = useState(false)
   const { login, isLoading } = useLogin({
@@ -72,15 +80,16 @@ const ProfileButton = () => {
   }
 
   return (
-    <div>
+    <>
       {(isConnected && address) ? (
         // token ? <WalletConnected currentAccount={address} /> : <Button onClick={onLogin} loading={isLoading}> Login </Button>
-        <WalletConnected currentAccount={address} />
+        <WalletConnected handleOpenMyProfile={() => {setIsOpen(true)}} />
         ) :
         <Button onClick={() => connect()} loading={isConnecting}> Connect </Button>
       }
       <MyProfilesDialog isOpen={isOpen} setIsOpen={setIsOpen}/>
-    </div>
+      <Avatar avatarUrl={profile?.avatarUrl}></Avatar>
+    </>
   )
 }
 

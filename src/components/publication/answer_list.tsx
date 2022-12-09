@@ -40,7 +40,7 @@ export const AnswerList = (answerListProps: AnswerListProps) => {
             <>
               <QuestionCard {...question} />
               <div className='flex'>
-                <Button icon={<PencilIcon width='1.2em' />} outline onClick={()=>setIsOpen(true)}> Answer</Button>
+                <Button icon={<PencilIcon/>} outline onClick={()=>setIsOpen(true)}> Answer</Button>
                 <AnswerDialog isOpen={isOpen} setIsOpen={setIsOpen} question={question}/>
               </div>
             </>

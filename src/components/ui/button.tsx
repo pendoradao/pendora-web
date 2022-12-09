@@ -59,7 +59,7 @@ export const Button = forwardRef<HTMLButtonElement, Props>(function Button(
       type={rest.type}
       {...rest}
     >
-      {icon}
+      {icon && <span className="w-5">{icon}</span>}
       <div>{children}</div>
     </button>
   );

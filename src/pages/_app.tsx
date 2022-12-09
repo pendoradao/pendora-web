@@ -7,13 +7,17 @@ import '@/styles/globals.css'
 import Layout from '@/components/layout'
 import { client } from '@lib/eth';
 import { IUserContext, UserContext } from '@context/app';
+import { Profile } from '@types'
 
 function MyApp({ Component, pageProps }: AppProps) {
   console.log('rendering app')
   const [token, setToken] = useState<string>('')
+  const [ profile, setProfile ] = useState<Profile | undefined>(undefined)
   const userContext: IUserContext = {
     token: token,
-    setToken: setToken
+    setToken: setToken,
+    profile: profile,
+    setProfile: setProfile
   }
 
   const PageView = () => {
