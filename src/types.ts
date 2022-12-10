@@ -30,6 +30,8 @@ export interface Profile {
   bio?: string;
   handle: string;
   avatarUrl?: string;
+  isDefault?: boolean;
+  ownedBy?: string;
 }
 
 export interface Publication {

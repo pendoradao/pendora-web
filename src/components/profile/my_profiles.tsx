@@ -2,21 +2,23 @@ import { useState, useEffect } from 'react';
 import { useContext } from 'react';
 import { Button, Modal } from '@components/ui';
 import { useAccount } from 'wagmi'
-import { PlusIcon } from '@heroicons/react/outline';
+import { PlusIcon, UserAddIcon } from '@heroicons/react/outline';
 
 import { Avatar } from '@components/ui';
 import { getProfilesByOwnedBy } from '@lib/profile';
 import { Profile } from '@types';
-import { UserContext } from '@context/app';
+import { UserContext } from '@store/app';
 
-interface IMyProfilesDialog {
+interface MyProfilesDialogProps {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
 }
 
-function MyProfilesDialog({ isOpen, setIsOpen }: IMyProfilesDialog) {
+function MyProfilesDialog({ isOpen, setIsOpen }: MyProfilesDialogProps) {
+// export function MyProfilesDialog({ isOpen, setIsOpen }: MyProfilesDialogProps) {
   const { address } = useAccount()
   const { profile, setProfile } = useContext(UserContext)
+  // const [isOpen, setIsOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [items, setItem] = useState<Profile[]>([])
 
@@ -25,7 +27,7 @@ function MyProfilesDialog({ isOpen, setIsOpen }: IMyProfilesDialog) {
     if (isOpen && address) {
       setLoading(true)
       // test address: 0x6C77a5a88C0AE712BAeABE12FeA81532060dcBf5
-      getProfilesByOwnedBy("0x6C77a5a88C0AE712BAeABE12FeA81532060dcBf5").then((profiles) => {
+      getProfilesByOwnedBy(address).then((profiles) => {
         setItem(profiles.items)
         console.log('profiles', profiles)
         setLoading(false)
@@ -57,7 +59,7 @@ function MyProfilesDialog({ isOpen, setIsOpen }: IMyProfilesDialog) {
           }
         </div>
         <div className='flex justify-center pt-4'>
-          <Button icon={<PlusIcon />}>New Account</Button>
+          <Button icon={<UserAddIcon />}>New Account</Button>
         </div>
       </>
     </Modal>

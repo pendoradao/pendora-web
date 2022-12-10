@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import { HeartIcon, ChatAltIcon } from '@heroicons/react/outline';
 import { HeartIcon as HeartIconSolid } from '@heroicons/react/solid';
 
-import { Tooltip } from '@components/ui';
+import { Avatar, Tooltip } from '@components/ui';
 import { Question, Profile, Post } from '@types';
 import styles from '@/styles/publication.module.css';
 
@@ -75,9 +75,7 @@ const SinglePublication: FC<Post & PostContext> = ({
         </div>
       )}
       <div className={styles.header} onClick={handlerGoUser} >
-        <div className={styles.header__avatar}>
-          <Image src={userAvatar} alt="avatar" width={48} height={48} />
-        </div>
+        <Avatar avatarUrl={userAvatar} className='mr-4'/>
         <div className={styles.header__info}>
           <div className={styles.header__info__name}>
             <span>{userName}</span>

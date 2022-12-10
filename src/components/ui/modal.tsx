@@ -5,8 +5,8 @@ import clsx from 'clsx';
 interface IModal {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
-  title?: string
-  content?: string
+  title?: ReactNode;
+  content?: string;
   children: ReactNode;
   className?: string;
 }

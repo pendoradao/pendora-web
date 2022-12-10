@@ -13,14 +13,15 @@ interface MenuItemProps {
 interface MenuProps {
   children: ReactNode;
   items: MenuItemProps[][];
+  classNameMenu?: string;
 }
 
 export const Menu : FC<MenuProps> = (
-  { children, items }: MenuProps,
+  { children, items, classNameMenu }: MenuProps,
 ) => {
   return (
-    <HMenu as="div" className="relative inline-block text-left">
-      <HMenu.Button as={Button} outline>
+    <HMenu as='div' className={`relative ${classNameMenu}`}>
+      <HMenu.Button>
         {children}
       </HMenu.Button>
       <Transition
