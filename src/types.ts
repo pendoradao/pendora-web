@@ -30,6 +30,13 @@ export interface Profile {
   bio?: string;
   handle: string;
   avatarUrl?: string;
+  isDefault?: boolean;
+  ownedBy?: string;
+  picture?: {
+    original: {
+      url: string;
+    };
+  }
 }
 
 export interface Publication {

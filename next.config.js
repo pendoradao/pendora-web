@@ -11,6 +11,10 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'lens.infura-ipfs.io'
+      },
+      {
+        protocol: 'https',
+        hostname: 'avatar.tobi.sh'
       }
     ],
   },

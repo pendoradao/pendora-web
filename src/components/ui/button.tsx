@@ -34,17 +34,17 @@ export const Button = forwardRef<HTMLButtonElement, Props>(function Button(
             !outline && !light && variant === 'info',
           'bg-red-500 hover:bg-red-400 border border-red-600 text-white focus:ring-red-400':
             !outline && !light && variant === 'danger',
-          'border border-brand-500 text-brand hover:bg-brand-100 focus:ring-brand-400':
+          'border border-brand-200 text-brand hover:bg-brand-100 focus:ring-brand-400':
             outline && !light && variant === 'primary',
-          'border border-gray-500 text-gray-500 hover:bg-gray-100 focus:ring-gray-400':
+          'border border-gray-200 text-gray-500 hover:bg-gray-100 focus:ring-gray-400':
             outline && !light && variant === 'secondary',
-          'border border-green-500 text-green-500 hover:bg-green-100 focus:ring-green-400':
+          'border border-green-200 text-green-500 hover:bg-green-100 focus:ring-green-400':
             outline && !light && variant === 'success',
-          'border border-yellow-500 text-yellow-500 hover:bg-yellow-100 focus:ring-yellow-400':
+          'border border-yellow-200 text-yellow-500 hover:bg-yellow-100 focus:ring-yellow-400':
             outline && !light && variant === 'warning',
-          'border border-pink-500 text-pink-500 hover:bg-pink-100 focus:ring-pink-400':
+          'border border-pink-200 text-pink-500 hover:bg-pink-100 focus:ring-pink-400':
             outline && !light && variant === 'info',
-          'border border-red-500 text-red-500 hover:bg-red-100 focus:ring-red-400':
+          'border border-red-200 text-red-500 hover:bg-red-100 focus:ring-red-400':
             outline && !light && variant === 'danger',
           'border-none !shadow-none text-gray-500': light,
           'px-2 py-0.5': size === 'sm',
@@ -59,7 +59,7 @@ export const Button = forwardRef<HTMLButtonElement, Props>(function Button(
       type={rest.type}
       {...rest}
     >
-      {icon}
+      {icon && <span className="w-5">{icon}</span>}
       <div>{children}</div>
     </button>
   );

@@ -5,7 +5,7 @@ import { Disclosure } from '@headlessui/react';
 import { MenuIcon, XIcon } from '@heroicons/react/outline';
 
 import { Button } from '@components/ui';
-import ProfileButton from './profile_button';
+import LoginButton from './user_button';
 
 const NavButton = ({ open }: { open: boolean }) => {
   return (
@@ -72,10 +72,8 @@ const Navbar = () => {
             </div>
             <div className='flex-1'></div>
             <div className="flex gap-4 items-center mr-4">
-              <Button outline >Ask a Question</Button>
-            </div>
-            <div className="flex gap-4 items-center">
-              <ProfileButton />
+              <Button variant='info'>Ask a Question</Button>
+              <LoginButton />
             </div>
           </div>
           <Disclosure.Panel className="sm:hidden">

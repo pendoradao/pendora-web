@@ -22,14 +22,6 @@
   cursor: pointer; 
 }
 
-.header__avatar {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  overflow: hidden;
-  margin-right: 1em;
-}
-
 .header__info {
   display: flex;
   flex-direction: column;
