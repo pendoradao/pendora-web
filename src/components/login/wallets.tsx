@@ -1,5 +1,4 @@
 import { useState, useEffect, Dispatch } from 'react';
-import clsx from 'clsx';
 import { useAppPersistStore, useAppStore } from '@store/app';
 import Cookies from 'js-cookie';
 import { toast } from 'react-toastify';
@@ -21,6 +20,7 @@ const SwitchNetwork = () => {
 interface Props {
   setHasConnected: Dispatch<boolean>;
   setHasProfile: Dispatch<boolean>;
+  // setOpen: Dispatch<boolean>;
 }
 
 const Wallets = ({ setHasConnected, setHasProfile }: Props) => {
@@ -80,8 +80,7 @@ const Wallets = ({ setHasConnected, setHasProfile }: Props) => {
         variables: { ownedBy: address }
       });
       setIsConnected(true);
-      console.log(profilesData);
-      console.log(profilesData?.profiles?.items?.length);
+
       if (profilesData?.profiles?.items?.length === 0) {
         setHasProfile(false);
       } else {
@@ -128,16 +127,13 @@ const Wallets = ({ setHasConnected, setHasProfile }: Props) => {
     <div className="inline-block overflow-hidden space-y-3 w-full text-left align-middle transition-all transform">
       {connectors.map((connector) => {
         return (
-          <button
-            type="button"
+          <Button
             key={connector.id}
-            className={clsx(
-              {
-                'hover:bg-gray-100 dark:hover:bg-gray-700': connector.id !== activeConnector?.id
-              },
-              'w-full flex items-center space-x-2.5 justify-center px-4 py-3 overflow-hidden rounded-xl border dark:border-gray-700/80 outline-none'
-            )}
             onClick={() => onConnect(connector)}
+            size="lg"
+            variant="primary"
+            outline 
+            className='block w-1/2'
             disabled={mounted ? !connector.ready || connector.id === activeConnector?.id : false}
           >
             <span className="flex justify-between items-center w-full">
@@ -152,7 +148,7 @@ const Wallets = ({ setHasConnected, setHasProfile }: Props) => {
               width={24}
               alt={connector.id}
             /> */}
-          </button>
+          </Button>
         );
       })}
       {error?.message ? (

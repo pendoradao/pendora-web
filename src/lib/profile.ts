@@ -3,7 +3,25 @@ import { gql } from '@apollo/client'
 import { Profile } from '@/types'
 import { client } from './request'
 
-export const modifyProfileData = (profileData: Profile & {picture: any}) => {
+export const GET_PROFILE = gql`
+query Profile($profileId: ProfileId!) {
+  profile(request: { profileId: $profileId }) {
+    id
+    name
+    bio
+    picture {
+      ... on MediaSet {
+        original {
+          url
+        }
+      }
+    }
+    handle
+  }
+}
+`
+
+export const getAvatarUrl = (profileData: Profile) => {
   const picture = profileData.picture
   let avatarUrl = ''
   if (picture && picture.original && picture.original.url) {
@@ -11,10 +29,20 @@ export const modifyProfileData = (profileData: Profile & {picture: any}) => {
       let result = picture.original.url.substring(7, picture.original.url.length)
       avatarUrl = `http://lens.infura-ipfs.io/ipfs/${result}`
     } else {
-      avatarUrl = profileData.picture.original.url
+      avatarUrl = profileData?.picture?.original.url || ''
     }
   }
-  return {...profileData, avatarUrl: avatarUrl}
+  return avatarUrl
+}
+
+export const getProfile = async (profileId: string) => {
+  const { data } = await client.query({
+    query: GET_PROFILE,
+    variables: {
+      profileId
+    }
+  })
+  return data.profile
 }
 
 export const getProfilesByOwnedBy = async (ownedBy: `0x${string}` | undefined) => {
@@ -49,8 +77,22 @@ export const getProfilesByOwnedBy = async (ownedBy: `0x${string}` | undefined) =
       ownedBy
     }
   });
-  const items = data.profiles.items.map((profile: any) => {
-    return modifyProfileData(profile)
+  return data.profiles
+}
+
+export const deleteProfile = async (profileId: string) => {
+  const { data } = await client.mutate({
+    mutation: gql`
+    mutation CreateBurnProfileTypedData ($profileId: ProfileId!) {
+      createBurnProfileTypedData(request: { profileId: $profileId }) {
+        id
+        expiresAt
+      }
+    }
+    `,
+    variables: {
+      profileId
+    }
   })
-  return {...data.profiles.pageInfo, items: items};
+  return data.deleteProfile
 }

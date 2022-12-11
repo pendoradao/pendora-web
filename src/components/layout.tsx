@@ -3,7 +3,7 @@ import Cookies from 'js-cookie';
 import { useAccount, useDisconnect, useNetwork } from 'wagmi';
 
 import { useAppPersistStore, useAppStore } from '@store/app';
-import { CHAIN_ID } from '@constants';
+import { CHAIN_ID, LOCAL_STORAGE_KEY } from '@constants';
 import Footer from './footer'
 import Narbar from './navbar'
 
@@ -34,7 +34,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       setCurrentUser(null);
       Cookies.remove('accessToken');
       Cookies.remove('refreshToken');
-      localStorage.removeItem('lenster.store');
+      localStorage.removeItem(LOCAL_STORAGE_KEY);
       if (disconnect) disconnect();
     };
 

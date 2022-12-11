@@ -1,65 +1,53 @@
 import { useEffect, useState } from 'react';
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import { gql } from '@apollo/client'
+import Cookies from 'js-cookie';
 
-import { client } from '@lib/request';
+import { LOCAL_STORAGE_KEY } from '@constants';
+import { useAppPersistStore } from '@store/app';
+import { getProfile, getAvatarUrl, deleteProfile } from '@lib/profile';
+import { getPublications } from '@lib/publication';
 import { GridLayout } from '@components/ui';
 import { Profile, Publication } from '@types';
-
-export const getProfile = gql`
-query Profile($profileId: ProfileId!) {
-  profile(request: { profileId: $profileId }) {
-    id
-    name
-    bio
-    picture {
-      ... on MediaSet {
-        original {
-          url
-        }
-      }
-    }
-    handle
-  }
-}
-`
-
-export const getPublications = gql`
-  query Publications($id: ProfileId!, $limit: LimitScalar) {
-    publications(request: {
-      profileId: $id,
-      publicationTypes: [POST],
-      limit: $limit
-    }) {
-      items {
-        __typename 
-        ... on Post {
-          ...PostFields
-        }
-      }
-    }
-  }
-  fragment PostFields on Post {
-    id
-    metadata {
-      ...MetadataOutputFields
-    }
-  }
-  fragment MetadataOutputFields on MetadataOutput {
-    content
-  }
-`
+import { Button } from '@components/ui';
+import { useDisconnect } from 'wagmi';
 
 const ProfileArea = (profile: Profile) => {
+  const { disconnect } = useDisconnect();
+  const currentUser = useAppPersistStore(state => state.currentUser)
+  const setCurrentUser = useAppPersistStore(state => state.setCurrentUser)
+  const isMe = currentUser?.id === profile.id
+
+  const logout = () => {
+    setCurrentUser(null);
+    Cookies.remove('accessToken');
+    Cookies.remove('refreshToken');
+    localStorage.removeItem(LOCAL_STORAGE_KEY);
+    if (disconnect) disconnect();
+  }
+
+  const handleDeleteProfile = async () => {
+    currentUser?.id && await deleteProfile(currentUser.id)
+    logout()
+  }
+
   return (
-    <div className='flex flex-col justify-center items-center'>
+    <div className='flex flex-col justify-center items-center gap-2'>
       <img
         className='w-64 rounded-full'
-        src={profile.avatarUrl}
+        src={getAvatarUrl(profile)}
       />
       <p className='text-4xl mt-8 mb-8'>{profile.handle}</p>
-      <p className='text-center text-xl font-bold mt-2 mb-2 w-1/2'>{profile.bio}</p>
+      <p className='text-center text-xl mt-2 mb-2'>{profile.bio}</p>
+      {
+        isMe && (
+          <>
+            {/* <Button outline className='w-4/5'>Edit Profile</Button> */}
+            <Button variant='danger' className='w-4/5' onClick={handleDeleteProfile}>Delete Profile</Button>
+          </>
+        )
+      }
+      
     </div>
   )
 }
@@ -79,40 +67,28 @@ const PublicationArea = ({ publications }: { publications: Publication[] }) => {
 }
 
 const UserPage: NextPage = () => {
+  const currentUser = useAppPersistStore(state => state.currentUser)
   const router = useRouter();
   const { profile_id } = router.query
   const profileId = profile_id as string
   const [profile, setProfile] = useState<Profile | null>(null)
   const [publications, setPublications] = useState<Publication[]>([])
+  const [isMe, setIsMe] = useState(false)
 
   useEffect(() => {
     if (profileId) {
       fetchProfile()
     }
-  }, [profileId])
+    if (currentUser?.id === profileId) {
+      setIsMe(true)
+    }
+  }, [profileId, currentUser])
   async function fetchProfile() {
     try {
-      /* fetch profiles from Lens API */
-      let returnedProfile = await client.query({ query: getProfile, variables: { profileId } })
-      /* loop over profiles, create properly formatted ipfs image links */
-      const profileData = { ...returnedProfile.data.profile }
-      const picture = profileData.picture
-      if (picture && picture.original && picture.original.url) {
-        if (picture.original.url.startsWith('ipfs://')) {
-          let result = picture.original.url.substring(7, picture.original.url.length)
-          profileData.avatarUrl = `http://lens.infura-ipfs.io/ipfs/${result}`
-        } else {
-          profileData.avatarUrl = profileData.picture.original.url
-        }
-      }
-      setProfile(profileData)
-      const pubs = await client.query({
-        query: getPublications,
-        variables: {
-          id: profileData.id, limit: 20
-        }
-      })
-      setPublications(pubs.data.publications.items)
+      const profile = await getProfile(profileId)
+      setProfile(profile)
+      const pubs = await getPublications(profile.id, 20)
+      setPublications(pubs.items)
     } catch (err) {
       console.log({ err })
     }
@@ -123,7 +99,7 @@ const UserPage: NextPage = () => {
   return (
     <GridLayout className='mt-8'>
       <div className='lg:col-span-3 lg:col-start-2 md:col-span-12 col-span-12 mb-5'>
-        <ProfileArea {...profile} />
+        <ProfileArea {...profile}/>
       </div>
       <div className='lg:col-span-6 lg:col-start-6 md:col-span-12 col-span-12 mb-5'>
         <PublicationArea publications={publications} />

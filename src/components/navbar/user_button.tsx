@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import { useDisconnect } from 'wagmi'
 import Cookies from 'js-cookie';
 
 import { Avatar, Menu, Modal } from '@components/ui';
+import { getAvatarUrl } from '@lib/profile';
 import { useAppPersistStore, useAppStore } from '@store/app';
 import Login from '@components/login';
 import { LOCAL_STORAGE_KEY } from '@constants';
@@ -12,21 +14,8 @@ interface MenuItemType {
   onClick: () => void;
 }
 
-interface ConnectedButtonProps {
-  menuItemsGroups: MenuItemType[][];
-}
-
-const ConnectedButton = ({ menuItemsGroups }: ConnectedButtonProps) => {
-  const currentUser = useAppPersistStore((state) => state.currentUser);
-
-  return (
-    <Menu items={menuItemsGroups} classNameMenu='h-12'>  {/* fix menu height*/}
-      <Avatar avatarUrl={currentUser?.avatarUrl}></Avatar>
-    </Menu>
-  )
-}
-
 const UserButton = () => {
+  const { push } = useRouter();
   const [domLoaded, setDomLoaded] = useState(false);
 
   useEffect(() => {
@@ -44,14 +33,36 @@ const UserButton = () => {
   const staffMode = useAppPersistStore((state) => state.staffMode);
   const setStaffMode = useAppPersistStore((state) => state.setStaffMode);
 
+  useEffect(() => {
+    if (isAuthenticated && !currentUser) {
+      const user = profiles.find((profile) => profile.id === localStorage.getItem(LOCAL_STORAGE_KEY));
+      setCurrentUser(user || null);
+    }
+    if (isAuthenticated && currentUser) {
+      setShowLoginModal(false);
+    }
+  }, [isAuthenticated, currentUser, profiles]);
+
+
   const loginedMenuItemsGroups = [
     [
       {
         label: currentUser?.handle || '',
-        onClick: () => console.log('Profile'),
+        onClick: () => { currentUser?.id && push(`/u/${currentUser?.id}`) }
       },
+    ],
+    [
       {
-        label: 'Choose Login Account',
+        label: 'Logout',
+        onClick: () => Logout(),
+      }
+    ]
+  ]
+
+  const connectedMenuItemsGroups = [
+    [
+      {
+        label: 'Sign in with Lens',
         onClick: () => setShowLoginModal(true),
       }
     ],
@@ -69,12 +80,6 @@ const UserButton = () => {
         label: 'Sign in with Lens',
         onClick: () => setShowLoginModal(true),
       }
-    ],
-    [
-      {
-        label: 'Logout',
-        onClick: () => Logout(),
-      }
     ]
   ]
 
@@ -85,31 +90,33 @@ const UserButton = () => {
     localStorage.removeItem(LOCAL_STORAGE_KEY);
     if (disconnect) disconnect();
   }
-  // https://stackoverflow.com/questions/71706064/react-18-hydration-failed-because-the-initial-ui-does-not-match-what-was-render
+  // fix Hydration failed error
   if (!domLoaded) return null;
 
+  let menuItemsGroups: MenuItemType[][];
+
+  if (isAuthenticated && currentUser) {
+    menuItemsGroups = loginedMenuItemsGroups
+  } else if (isConnected) {
+    menuItemsGroups = connectedMenuItemsGroups
+  } else {
+    menuItemsGroups = unloginedMenuItemsGroups
+  }
+
   return (
-    isAuthenticated && currentUser ? (
-      <ConnectedButton menuItemsGroups={loginedMenuItemsGroups}></ConnectedButton>
-    ) :
-      <>
-        <Modal
-          title="Login"
-          isOpen={showLoginModal}
-          setIsOpen={setShowLoginModal}
-        >
-          <Login />
-        </Modal>
-        {
-          isConnected ? (
-            <ConnectedButton menuItemsGroups={unloginedMenuItemsGroups}></ConnectedButton>
-          ) : (
-            <Avatar avatarUrl='' onClick={() => setShowLoginModal(!showLoginModal)} className='cursor-pointer'></Avatar>
-          )
-        }
-      </>
-
-
+    <>
+      <Modal
+        title="Login"
+        open={showLoginModal}
+        setOpen={setShowLoginModal}
+        className='w-full md:w-1/4 '
+      >
+        <Login />
+      </Modal>
+      <Menu items={menuItemsGroups} classNameMenu='h-12'>  {/* fix menu height*/}
+        <Avatar avatarUrl={currentUser && getAvatarUrl(currentUser)}></Avatar>
+      </Menu>
+    </>
   )
 }
 

@@ -3,7 +3,6 @@ import type { NextPage } from 'next'
 import { GridLayout, GridItemMain } from '@components/ui';
 import { PublicationList } from '@components/publication/publication_list';
 
-
 const Home: NextPage = () => {
   return (
     <GridLayout>

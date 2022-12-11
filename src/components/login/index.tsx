@@ -4,7 +4,11 @@ import { APP_NAME, IS_MAINNET } from '@constants';
 import Wallets from './wallets';
 import NewProfile from './new';
 
-const Login = () => {
+interface LoginProps {
+  // setOpen: (open: boolean) => void;
+}
+
+const Login = ({}: LoginProps) => {
   const [hasConnected, setHasConnected] = useState<boolean>(false);
   const [hasProfile, setHasProfile] = useState<boolean>(true);
 
@@ -24,7 +28,7 @@ const Login = () => {
               <div className="text-xl font-bold">Connect your wallet.</div>
             </div>
           )}
-          <Wallets setHasConnected={setHasConnected} setHasProfile={setHasProfile} />
+          <Wallets setHasConnected={setHasConnected} setHasProfile={setHasProfile}/>
         </div>
       ) : IS_MAINNET ? (
         <div>

@@ -32,6 +32,11 @@ export interface Profile {
   avatarUrl?: string;
   isDefault?: boolean;
   ownedBy?: string;
+  picture?: {
+    original: {
+      url: string;
+    };
+  }
 }
 
 export interface Publication {

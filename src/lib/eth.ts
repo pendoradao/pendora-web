@@ -31,7 +31,7 @@ const connectors = () => {
 };
 
 const client = createClient({
-  autoConnect: false,
+  autoConnect: true,
   connectors,
   provider,
   webSocketProvider,

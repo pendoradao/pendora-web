@@ -4,7 +4,7 @@ import { UserCircleIcon } from '@heroicons/react/solid';
 import type { FC } from 'react';
 
 interface Props {
-  avatarUrl: string | undefined;
+  avatarUrl: string | undefined | null;
   onClick?: () => void;
   className?: string;
 }
@@ -12,7 +12,11 @@ interface Props {
 export const Avatar: FC<Props> = ({ avatarUrl, onClick, className = '' }) => {
   return (
     <div className={`w-12 h-12 relative ${className}`} onClick={onClick}>
-      {avatarUrl? <Image src={avatarUrl || ""} alt="" fill className="rounded-full" />:<UserCircleIcon className='text-zinc-400'/>}
+      {
+        avatarUrl ?
+          <Image src={avatarUrl || ""} alt="" fill className="rounded-full" /> :
+          <UserCircleIcon className='text-zinc-400' />
+      }
     </div>
   )
 }
