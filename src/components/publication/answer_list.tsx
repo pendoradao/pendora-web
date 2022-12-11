@@ -17,7 +17,7 @@ export const AnswerList = (answerListProps: AnswerListProps) => {
   const [data, setData] = useState([])
   const [question, setQuestion] = useState({} as Question)
   const [isLoading, setLoading] = useState(false)
-  const [isOpen, setIsOpen] = useState(false)
+  const [open, setOpen] = useState(false)
   const url = answerId ? `/api/a?questionId=${questionId}&answerId=${answerId}` : `/api/a?questionId=${questionId}`
 
   useEffect(() => {
@@ -40,8 +40,8 @@ export const AnswerList = (answerListProps: AnswerListProps) => {
             <>
               <QuestionCard {...question} />
               <div className='flex'>
-                <Button icon={<PencilIcon/>} outline onClick={()=>setIsOpen(true)}> Answer</Button>
-                <AnswerDialog isOpen={isOpen} setIsOpen={setIsOpen} question={question}/>
+                <Button icon={<PencilIcon/>} outline onClick={()=>setOpen(true)}> Answer</Button>
+                <AnswerDialog open={open} setOpen={setOpen} question={question}/>
               </div>
             </>
           ) : <></>

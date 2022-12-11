@@ -42,7 +42,7 @@ function MyProfilesDialog({ isOpen, setIsOpen }: MyProfilesDialogProps) {
   }
 
   return (
-    <Modal isOpen={isOpen} setIsOpen={setIsOpen} title="Login with Lens" className="w-full lg:w-1/4">
+    <Modal open={isOpen} setOpen={setIsOpen} title="Login with Lens" className="w-full lg:w-1/4">
       <>
         <div className='flex gap-2 mt-4 border-b'>
           {
