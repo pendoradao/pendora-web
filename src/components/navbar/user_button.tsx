@@ -22,19 +22,16 @@ const ConnectedButton = ({ menuItemsGroups }: ConnectedButtonProps) => {
   return (
     <Menu items={menuItemsGroups} classNameMenu='h-12'>  {/* fix menu height*/}
       <Avatar avatarUrl={currentUser?.avatarUrl}></Avatar>
-
     </Menu>
   )
 }
 
 const UserButton = () => {
-  // const  { profile }  = useContext(UserContext)
   const [domLoaded, setDomLoaded] = useState(false);
 
   useEffect(() => {
     setDomLoaded(true);
   }, []);
-
 
   const [showLoginModal, setShowLoginModal] = useState<boolean>(false);
   const { disconnect } = useDisconnect();
@@ -50,7 +47,7 @@ const UserButton = () => {
   const loginedMenuItemsGroups = [
     [
       {
-        label: 'Profile',
+        label: currentUser?.handle || '',
         onClick: () => console.log('Profile'),
       },
       {
@@ -67,6 +64,12 @@ const UserButton = () => {
   ]
 
   const unloginedMenuItemsGroups = [
+    [
+      {
+        label: 'Sign in with Lens',
+        onClick: () => setShowLoginModal(true),
+      }
+    ],
     [
       {
         label: 'Logout',
@@ -88,24 +91,23 @@ const UserButton = () => {
   return (
     isAuthenticated && currentUser ? (
       <ConnectedButton menuItemsGroups={loginedMenuItemsGroups}></ConnectedButton>
-    ) : 
-    <>
-          <Modal
-            title="Login"
-            isOpen={showLoginModal}
-            setIsOpen={setShowLoginModal}
-          >
-            <Login />
-          </Modal>
-    {
-      isConnected ? (
-        <ConnectedButton menuItemsGroups={unloginedMenuItemsGroups}></ConnectedButton>
-      ) : (
-        
-          <Avatar avatarUrl='' onClick={() => setShowLoginModal(!showLoginModal)}></Avatar>
-      )
-      }
-        </>
+    ) :
+      <>
+        <Modal
+          title="Login"
+          isOpen={showLoginModal}
+          setIsOpen={setShowLoginModal}
+        >
+          <Login />
+        </Modal>
+        {
+          isConnected ? (
+            <ConnectedButton menuItemsGroups={unloginedMenuItemsGroups}></ConnectedButton>
+          ) : (
+            <Avatar avatarUrl='' onClick={() => setShowLoginModal(!showLoginModal)} className='cursor-pointer'></Avatar>
+          )
+        }
+      </>
 
 
   )

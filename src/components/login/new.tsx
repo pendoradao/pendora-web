@@ -81,11 +81,10 @@ const NewProfile = () => {
           title="Create profile failed!"
           content={'error'}
         />
-        // <div></div>
       )}
 
         <div className="mb-2 space-y-4">
-          <img className="w-10 h-10" height={40} width={40} src="/logo.svg" alt="Logo" />
+          {/* <img className="w-10 h-10" height={40} width={40} src="/logo.svg" alt="Logo" /> */}
           <div className="text-xl font-bold">Signup to {APP_NAME}</div>
         </div>
 
@@ -100,8 +99,8 @@ const NewProfile = () => {
           )}
           <div>
             <div className="flex items-center space-x-3">
-              {/* <ChooseFile onChange={(evt: ChangeEvent<HTMLInputElement>) => handleUpload(evt)} />
-              {uploading && <Spinner size="sm" />} */}
+              <ChooseFile onChange={(evt: ChangeEvent<HTMLInputElement>) => handleUpload(evt)} />
+              {uploading && <Spinner size="sm" />}
             </div>
           </div>
         </div>

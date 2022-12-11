@@ -1,6 +1,5 @@
 import { useState, useEffect, Dispatch } from 'react';
 import clsx from 'clsx';
-import { gql, useLazyQuery, useMutation } from '@apollo/client';
 import { useAppPersistStore, useAppStore } from '@store/app';
 import Cookies from 'js-cookie';
 import { toast } from 'react-toastify';

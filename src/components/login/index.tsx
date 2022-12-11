@@ -1,10 +1,10 @@
-import { FC, useState } from 'react';
-import { APP_NAME, IS_MAINNET } from '@constants';
+import { useState } from 'react';
 
+import { APP_NAME, IS_MAINNET } from '@constants';
 import Wallets from './wallets';
 import NewProfile from './new';
 
-const Login: FC = () => {
+const Login = () => {
   const [hasConnected, setHasConnected] = useState<boolean>(false);
   const [hasProfile, setHasProfile] = useState<boolean>(true);
 
@@ -25,12 +25,11 @@ const Login: FC = () => {
             </div>
           )}
           <Wallets setHasConnected={setHasConnected} setHasProfile={setHasProfile} />
-          {/* <NewProfile/> */}
         </div>
       ) : IS_MAINNET ? (
         <div>
           <div className="mb-2 space-y-4">
-            <div className="text-xl font-bold">Claim your Lens profile 🌿</div>
+            <div className="text-xl font-bold">Claim your Lens profile</div>
             <div className="space-y-1">
               <div className="linkify">
                 Visit{' '}

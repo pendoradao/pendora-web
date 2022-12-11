@@ -4,7 +4,7 @@ interface Props {
   onChange: ChangeEventHandler<HTMLInputElement>;
 }
 
-const ChooseFile: FC<Props> = ({ onChange }) => {
+export const ChooseFile: FC<Props> = ({ onChange }) => {
   return (
     <input
       className="pr-1 text-sm text-gray-700 bg-white border border-gray-300 shadow-sm cursor-pointer dark:text-white dark:bg-gray-800 focus:outline-none dark:border-gray-700/80 focus:border-brand-400"
@@ -14,5 +14,3 @@ const ChooseFile: FC<Props> = ({ onChange }) => {
     />
   );
 };
-
-export default ChooseFile;
