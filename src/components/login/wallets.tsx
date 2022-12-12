@@ -8,7 +8,7 @@ import { Connector, useAccount, useConnect, useNetwork, useSignMessage } from 'w
 import { COOKIE_CONFIG } from '@lib/request';
 import { Button, Spinner } from '@components/ui';
 import { useChallenge, useAuth, useCurrentUser } from '@lib/auth';
-import { Profile } from '@types';
+import { Profile } from '@generated/types';
 import { CHAIN_ID } from '@constants';
 
 const SwitchNetwork = () => {

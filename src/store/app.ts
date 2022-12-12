@@ -3,7 +3,7 @@ import { createContext } from "react";
 import create from 'zustand';
 import { persist } from 'zustand/middleware';
 
-import { Profile } from "@types";
+import { Profile } from "@generated/types";
 import { LOCAL_STORAGE_KEY } from "@constants";
 
 export interface IUserContext {

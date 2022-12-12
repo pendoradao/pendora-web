@@ -41,7 +41,7 @@ const UserButton = () => {
     if (isAuthenticated && currentUser) {
       setShowLoginModal(false);
     }
-  }, [isAuthenticated, currentUser, profiles]);
+  }, [isAuthenticated, currentUser, profiles, setCurrentUser]);
 
 
   const loginedMenuItemsGroups = [

@@ -8,7 +8,8 @@ import { useAppPersistStore } from '@store/app';
 import { getProfile, getAvatarUrl, deleteProfile } from '@lib/profile';
 import { getPublications } from '@lib/publication';
 import { GridLayout } from '@components/ui';
-import { Profile, Publication } from '@types';
+import { Publication } from '@types';
+import { Profile } from '@generated/types';
 import { Button } from '@components/ui';
 import { useDisconnect } from 'wagmi';
 
@@ -76,6 +77,17 @@ const UserPage: NextPage = () => {
   const [isMe, setIsMe] = useState(false)
 
   useEffect(() => {
+    async function fetchProfile() {
+      try {
+        const profile = await getProfile(profileId)
+        setProfile(profile)
+        const pubs = await getPublications(profile.id, 20)
+        setPublications(pubs.items)
+      } catch (err) {
+        console.log({ err })
+      }
+    }
+
     if (profileId) {
       fetchProfile()
     }
@@ -83,16 +95,6 @@ const UserPage: NextPage = () => {
       setIsMe(true)
     }
   }, [profileId, currentUser])
-  async function fetchProfile() {
-    try {
-      const profile = await getProfile(profileId)
-      setProfile(profile)
-      const pubs = await getPublications(profile.id, 20)
-      setPublications(pubs.items)
-    } catch (err) {
-      console.log({ err })
-    }
-  }
 
   if (!profile) return null
 

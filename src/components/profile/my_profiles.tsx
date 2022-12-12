@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useContext } from 'react';
 import { Button, Modal } from '@components/ui';
 import { useAccount } from 'wagmi'
-import { PlusIcon, UserAddIcon } from '@heroicons/react/outline';
+import { UserAddIcon } from '@heroicons/react/outline';
 
 import { Avatar } from '@components/ui';
 import { getProfilesByOwnedBy } from '@lib/profile';

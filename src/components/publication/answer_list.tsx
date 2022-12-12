@@ -18,9 +18,9 @@ export const AnswerList = (answerListProps: AnswerListProps) => {
   const [question, setQuestion] = useState({} as Question)
   const [isLoading, setLoading] = useState(false)
   const [open, setOpen] = useState(false)
-  const url = answerId ? `/api/a?questionId=${questionId}&answerId=${answerId}` : `/api/a?questionId=${questionId}`
-
+  
   useEffect(() => {
+    const url = answerId ? `/api/a?questionId=${questionId}&answerId=${answerId}` : `/api/a?questionId=${questionId}`
     setLoading(true)
     fetch(url)
       .then((res) => res.json())
@@ -29,7 +29,7 @@ export const AnswerList = (answerListProps: AnswerListProps) => {
         setQuestion(data.question)
         setLoading(false)
       })
-  }, [])
+  }, [answerId, questionId])
 
   return (
     <div>

@@ -20,7 +20,7 @@ export const PublicationList = (publicationListProps: PublicationListProps) => {
         setData(data.data)
         setLoading(false)
       })
-  }, [])
+  }, [type])
 
   return (
     <div>

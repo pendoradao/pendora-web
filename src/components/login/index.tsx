@@ -4,11 +4,7 @@ import { APP_NAME, IS_MAINNET } from '@constants';
 import Wallets from './wallets';
 import NewProfile from './new';
 
-interface LoginProps {
-  // setOpen: (open: boolean) => void;
-}
-
-const Login = ({}: LoginProps) => {
+const Login = () => {
   const [hasConnected, setHasConnected] = useState<boolean>(false);
   const [hasProfile, setHasProfile] = useState<boolean>(true);
 
