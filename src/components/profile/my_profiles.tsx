@@ -6,7 +6,7 @@ import { UserAddIcon } from '@heroicons/react/outline';
 
 import { Avatar } from '@components/ui';
 import { getProfilesByOwnedBy } from '@lib/profile';
-import { Profile } from '@types';
+import { Profile } from '@generated/types';
 import { UserContext } from '@store/app';
 
 interface MyProfilesDialogProps {

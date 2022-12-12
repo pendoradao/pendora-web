@@ -1,36 +1,33 @@
-import { useState } from 'react'
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
 import { ApolloProvider } from '@apollo/client';
-import { WagmiConfig } from 'wagmi';
+import { WagmiConfig, useContract } from 'wagmi';
 import '@/styles/globals.css'
 
 import Layout from '@/components/layout'
 import { client } from '@lib/eth';
 import { client as apolloClient } from '@lib/request';
-import { IUserContext, UserContext } from '@store/app';
-import { Profile } from '@types'
+import { LENSHUB_PROXY } from "@constants";
+import { ContractContext } from '@store/contract';
+import LensHubABI from "@abi/lens_hub_contract_abi.json";
 
 function MyApp({ Component, pageProps }: AppProps) {
   console.log('rendering app')
-  const [token, setToken] = useState<string>('')
-  const [ profile, setProfile ] = useState<Profile | undefined>(undefined)
-  const userContext: IUserContext = {
-    token: token,
-    setToken: setToken,
-    profile: profile,
-    setProfile: setProfile
-  }
+
+  const lensHub = useContract({
+    address: LENSHUB_PROXY,
+    abi: LensHubABI,
+  })
 
   const PageView = () => {
     return (
       <WagmiConfig client={client}> 
         <ApolloProvider client={apolloClient}>
-          <UserContext.Provider value={userContext}>
+          <ContractContext.Provider value={{lensHub: lensHub}}>
             <Layout>
               <Component {...pageProps} />
             </Layout>
-          </UserContext.Provider>
+          </ContractContext.Provider>
          </ApolloProvider>
        </WagmiConfig>
     )

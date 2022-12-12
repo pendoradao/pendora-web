@@ -1,6 +1,11 @@
 import { gql } from '@apollo/client'
 
-import { Profile, ProfileDocument, UserProfilesDocument } from '@generated/types'
+import { 
+  Profile, 
+  ProfileDocument, 
+  UserProfilesDocument,
+  useCreateBurnProfileTypedDataMutation,
+} from '@generated/types'
 import { client } from './request'
 import { getIPFSLink } from './ipfs'
 
@@ -38,7 +43,9 @@ export const getProfilesByOwnedBy = async (ownedBy: `0x${string}` | undefined) =
   return data.profiles
 }
 
-export const deleteProfile = async (profileId: string) => {
+// export const useCreateBurnProfileTypedDataMutation
+
+export const createBurnProfileTypedData = async (profileId: string) => {
   const { data } = await client.mutate({
     mutation: gql`
     mutation CreateBurnProfileTypedData ($profileId: ProfileId!) {
