@@ -38,21 +38,6 @@ const client = createClient({
   webSocketProvider,
 })
 
-// export const signedTypeData = (
-//   domain: TypedDataDomain,
-//   types: Record<string, any>,
-//   value: Record<string, any>
-// ) => {
-//   const signer = getSigner();
-//   // remove the __typedname from the signature!
-//   return signer._signTypedData(
-//     omit(domain, '__typename'),
-//     omit(types, '__typename'),
-//     omit(value, '__typename')
-//   );
-// };
-
-
 export {
   client,
 }

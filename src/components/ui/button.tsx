@@ -2,6 +2,8 @@ import clsx from 'clsx';
 import type { ButtonHTMLAttributes, DetailedHTMLProps, ReactNode } from 'react';
 import { forwardRef } from 'react';
 
+import { Spinner } from '@components/ui';
+
 interface Props extends DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> {
   size?: 'sm' | 'md' | 'lg';
   variant?: 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'danger';
@@ -17,49 +19,39 @@ export const Button = forwardRef<HTMLButtonElement, Props>(function Button(
   { className = '', size = 'md', variant = 'primary', outline, light, loading, icon, children, ...rest },
   ref
 ) {
+  const disabled = rest.disabled || loading;
+  let filledColor = `bg-${variant}-600 border border-${variant}-600 text-white`
+  let outlineColor = `border border-${variant}-200 text-${variant}-500`
+
+  if (!disabled) {
+    filledColor += ` hover:bg-${variant}-700`
+    outlineColor += ` hover:bg-${variant}-100`
+  }
+
   return (
     <button
       ref={ref}
       className={clsx(
+        !outline && !light && filledColor,
+        outline && !light && outlineColor,
+        light && 'border-none !shadow-none text-primary-500 hover:text-primary-700',
+        (icon || loading) && children && 'flex items-center space-x-1.5 shrink-0',
         {
-          'bg-brand-500 hover:bg-brand-600 border border-brand-600 text-white focus:ring-brand-400':
-            !outline && !light && variant === 'primary',
-          'bg-gray-500 hover:bg-gray-600 border border-gray-600 text-white focus:ring-gray-400':
-            !outline && !light && variant === 'secondary',
-          'bg-green-500 hover:bg-green-400 border border-green-600 text-white focus:ring-green-400':
-            !outline && !light && variant === 'success',
-          'bg-yellow-500 hover:bg-yellow-400 border border-yellow-600 text-white focus:ring-yellow-400':
-            !outline && !light && variant === 'warning',
-          'bg-pink-500 hover:bg-pink-400 border border-pink-600 text-white focus:ring-pink-400':
-            !outline && !light && variant === 'info',
-          'bg-red-500 hover:bg-red-400 border border-red-600 text-white focus:ring-red-400':
-            !outline && !light && variant === 'danger',
-          'border border-brand-200 text-brand hover:bg-brand-100 focus:ring-brand-400':
-            outline && !light && variant === 'primary',
-          'border border-gray-200 text-gray-500 hover:bg-gray-100 focus:ring-gray-400':
-            outline && !light && variant === 'secondary',
-          'border border-green-200 text-green-500 hover:bg-green-100 focus:ring-green-400':
-            outline && !light && variant === 'success',
-          'border border-yellow-200 text-yellow-500 hover:bg-yellow-100 focus:ring-yellow-400':
-            outline && !light && variant === 'warning',
-          'border border-pink-200 text-pink-500 hover:bg-pink-100 focus:ring-pink-400':
-            outline && !light && variant === 'info',
-          'border border-red-200 text-red-500 hover:bg-red-100 focus:ring-red-400':
-            outline && !light && variant === 'danger',
-          'border-none !shadow-none text-gray-500': light,
           'px-2 py-0.5': size === 'sm',
           'px-3 py-1': size === 'md',
-          'px-4 py-1.5': size === 'lg',
-          'flex items-center space-x-1.5 shrink-0': icon && children
+          'px-4 py-1.5': size === 'lg'
         },
-        'font-bold disabled:opacity-50 shadow-sm focus:ring-2 focus:ring-opacity-50 focus:ring-offset-1 outline-none',
+        'font-bold disabled:opacity-50 shadow-sm outline-none rounded',
         className
       )}
-      disabled={loading}
-      type={rest.type}
+      disabled={disabled}
       {...rest}
     >
-      {icon && <span className="w-5">{icon}</span>}
+      {
+        (icon || loading) && <span className="w-5">
+          {loading? <Spinner variant={variant} size='xs'/>: icon}
+        </span>
+      }
       <div>{children}</div>
     </button>
   );

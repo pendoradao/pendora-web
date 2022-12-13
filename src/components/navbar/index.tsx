@@ -72,7 +72,7 @@ const Navbar = () => {
             </div>
             <div className='flex-1'></div>
             <div className="flex gap-4 items-center mr-4">
-              <Button variant='info'>Ask a Question</Button>
+              <Button variant='primary'>Ask a Question</Button>
               <LoginButton />
             </div>
           </div>

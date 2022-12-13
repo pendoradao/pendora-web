@@ -4,18 +4,11 @@
 @tailwind components;
 @tailwind utilities;
 
-html,
-body {
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, serif, sans-serif;
-    background-color: rgb(255, 252, 248);
+@layer base {
+  html,
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+      Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, serif, sans-serif;
+      @apply bg-background;
+  }
 }
-
-/* a {
-  color: inherit;
-  text-decoration: none;
-} */
-
-/* * {
-  box-sizing: border-box;
-} */
