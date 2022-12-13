@@ -4,8 +4,11 @@ import { useAccount, useDisconnect, useNetwork } from 'wagmi';
 
 import { useAppPersistStore, useAppStore } from '@store/app';
 import { CHAIN_ID, LOCAL_STORAGE_KEY } from '@constants';
+import QuestionDialog from '@components/publication/question_dialog';
+import { ModalContext, Modals } from '@context/modals';
 import Footer from './footer'
 import Narbar from './navbar'
+
 
 export default function Layout({ children }: { children: ReactNode }) {
   const setProfiles = useAppStore((state) => state.setProfiles);
@@ -21,6 +24,13 @@ export default function Layout({ children }: { children: ReactNode }) {
   const { address, isDisconnected } = useAccount();
   const { chain } = useNetwork();
   const { disconnect } = useDisconnect();
+  const [questionDialogOpen, setQuestionDialogOpen] = useState<boolean>(false);
+  const modalContext = {
+    questionDialog: {
+      open: questionDialogOpen,
+      setOpen: setQuestionDialogOpen,
+    },
+  } as Modals;
 
   useEffect(() => {
     const accessToken = Cookies.get('accessToken');
@@ -65,11 +75,14 @@ export default function Layout({ children }: { children: ReactNode }) {
 
   return (
     <>
-      <Narbar />
-      <div className="min-h-screen" style={{minHeight: '100vh', marginTop: 12}}>
-        <main>{children}</main>
-      </div>
-      <Footer />
+      <ModalContext.Provider value={modalContext}>
+        <QuestionDialog open={questionDialogOpen} setOpen={setQuestionDialogOpen}></QuestionDialog>
+        <Narbar />
+        <div className="min-h-screen" style={{ minHeight: '100vh', marginTop: 12 }}>
+          <main>{children}</main>
+        </div>
+        <Footer />
+      </ModalContext.Provider>
     </>
   )
 }

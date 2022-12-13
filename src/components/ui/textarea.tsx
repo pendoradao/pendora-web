@@ -1,13 +1,25 @@
-import type { FC } from 'react';
+import { ComponentProps, forwardRef, useId } from 'react';
 
-interface ITextarea {
-  value?: string;
-  rows?: number;
-  placeholder?: string;
+// import { FieldError } from './Form';
+
+interface Props extends ComponentProps<'textarea'> {
+  label?: string;
+  className?: string;
 }
 
-export const Textarea: FC<ITextarea> = ({ value, rows, placeholder }) => {
+export const Textarea = forwardRef<HTMLTextAreaElement, Props>(function TextArea({ label, className, ...props }, ref) {
+  const id = useId();
+
   return (
-    <textarea value={value} rows={rows} placeholder={placeholder} className='w-full border border-zinc-300 disabled:bg-gray-500 disabled:bg-opacity-20 disabled:opacity-60 focus:border-brand-500 focus:ring-brand-400'></textarea>
-  )
-}
+    <label htmlFor={id}>
+      {label && <div className="label">{label}</div>}
+      <textarea
+        id={id}
+        className={`w-full px-1 py-1 rounded border border-zinc-300 disabled:bg-gray-500 disabled:bg-opacity-20 disabled:opacity-60 focus:border-primary-500 focus:ring-primary-400 ${className}`}
+        ref={ref}
+        {...props}
+        />
+      {/* {props.name && <FieldError name={props.name} />} */}
+    </label>
+  );
+});

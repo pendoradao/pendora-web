@@ -20,20 +20,20 @@ export const Button = forwardRef<HTMLButtonElement, Props>(function Button(
   ref
 ) {
   const disabled = rest.disabled || loading;
-  let filledColor = `bg-${variant}-600 border border-${variant}-600 text-white`
-  let outlineColor = `border border-${variant}-200 text-${variant}-500`
-
-  if (!disabled) {
-    filledColor += ` hover:bg-${variant}-700`
-    outlineColor += ` hover:bg-${variant}-100`
-  }
-
   return (
     <button
       ref={ref}
       className={clsx(
-        !outline && !light && filledColor,
-        outline && !light && outlineColor,
+        // have to do this wired thing or color will not be applied
+        // 'bg-primary-600 bg-secondary-600 bg-success-600 bg-info-600 bg-warning-600 bg-danger-600', 
+        // 'hover:bg-primary-700 hover:bg-secondary-700 hover:bg-success-700 hover:bg-info-700 hover:bg-warning-700 hover:bg-danger-700',
+        // 'hover:bg-primary-100 hover:bg-secondary-100 hover:bg-success-100 hover:bg-info-100 hover:bg-warning-100 hover:bg-danger-100',
+        // 'border-primary-200 border-secondary-200 border-success-200 border-info-200 border-warning-200 border-danger-200',
+        // 'text-primary-500 text-secondary-500 text-success-500 text-info-500 text-warning-500 text-danger-500',
+        !outline && !light && `bg-${variant}-600 border text-white`,
+        !outline && !light && !disabled && `hover:bg-${variant}-700`,
+        outline && !light && `border border-${variant}-200 text-${variant}-500`,
+        outline && !light && !disabled && `hover:bg-${variant}-100`,
         light && 'border-none !shadow-none text-primary-500 hover:text-primary-700',
         (icon || loading) && children && 'flex items-center space-x-1.5 shrink-0',
         {

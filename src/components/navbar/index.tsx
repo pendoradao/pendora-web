@@ -1,3 +1,4 @@
+import { useContext } from 'react';
 import clsx from 'clsx';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -6,6 +7,8 @@ import { MenuIcon, XIcon } from '@heroicons/react/outline';
 
 import { Button } from '@components/ui';
 import LoginButton from './user_button';
+// import QuestionDialog from '@components/publication/question_dialog';
+import { ModalContext } from '@context/modals';
 
 const NavButton = ({ open }: { open: boolean }) => {
   return (
@@ -53,7 +56,11 @@ const NavItems = () => {
 
 const Navbar = () => {
   const { pathname, push } = useRouter();
+  const modalContext = useContext(ModalContext);
 
+  const handleOpenQuestionDialog = () => {
+    modalContext.questionDialog.setOpen(true);
+  }
   return (
     <Disclosure as='header' className='sticky top-0 w-full bg-white border-b z-10'>
       {({ open }) => (
@@ -72,7 +79,8 @@ const Navbar = () => {
             </div>
             <div className='flex-1'></div>
             <div className="flex gap-4 items-center mr-4">
-              <Button variant='primary'>Ask a Question</Button>
+              {/* <QuestionDialog /> */}
+              <Button variant='primary' onClick={handleOpenQuestionDialog}>Ask a Question</Button>
               <LoginButton />
             </div>
           </div>

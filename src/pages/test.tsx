@@ -28,8 +28,8 @@ const ButtonArea = () => {
           {
             //@ts-ignore
             variants.map((variant) => (
-              <div className="flex gap-8 mt-4">
-                <Button variant={variant}>Test Button</Button>
+              <div key={variant} className="flex gap-8 mt-4">
+                <Button variant={variant} >Test Button</Button>
                 <Button variant={variant} outline>Test Button</Button>
                 <Button variant={variant} light>Test Button</Button>
                 <span>{variant}</span>
@@ -37,10 +37,10 @@ const ButtonArea = () => {
             ))
           }
         </div>
-        <div className="flex gap-8">
+        <div className="flex gap-8 items-center">
           {
             //@ts-ignore
-            sizes.map((size) => (<Button size={size}>{size} Button</Button>))
+            sizes.map((size) => (<Button size={size} key={size}>{size} Button</Button>))
           }
         </div>
         <div className="flex gap-8">

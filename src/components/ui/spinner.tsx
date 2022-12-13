@@ -3,7 +3,7 @@ import type { FC } from 'react';
 
 interface Props {
   className?: string;
-  variant?: 'primary' | 'secondary' | 'success'  | 'info'  | 'warning'| 'danger';
+  variant?: 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'danger';
   size?: 'xs' | 'sm' | 'md' | 'lg';
 }
 
@@ -18,6 +18,13 @@ export const Spinner: FC<Props> = ({ className = '', variant = 'primary', size =
   return (
     <div
       className={clsx(
+        // have to do this wired thing or color will not be applied
+        // 'border-primary-100 border-t-primary-600',
+        // 'border-secondary-100 border-t-secondary-600',
+        // 'border-success-100 border-t-success-600',
+        // 'border-info-100 border-t-info-600',
+        // 'border-warning-100 border-t-warning-600',
+        // 'border-danger-100 border-t-danger-600',
         color,
         sizeClass,
         'animate-spin rounded-full',
