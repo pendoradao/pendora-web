@@ -1,13 +1,12 @@
 import { useState, useEffect } from 'react';
-import { useContext } from 'react';
 import { Button, Modal } from '@components/ui';
 import { useAccount } from 'wagmi'
 import { UserAddIcon } from '@heroicons/react/outline';
 
 import { Avatar } from '@components/ui';
-import { getProfilesByOwnedBy } from '@lib/profile';
+import { getProfilesByOwnedBy, getAvatarUrl } from '@lib/profile';
 import { Profile } from '@generated/types';
-import { UserContext } from '@store/app';
+import { useAppPersistStore } from '@store/app';
 
 interface MyProfilesDialogProps {
   isOpen: boolean;
@@ -15,10 +14,9 @@ interface MyProfilesDialogProps {
 }
 
 function MyProfilesDialog({ isOpen, setIsOpen }: MyProfilesDialogProps) {
-// export function MyProfilesDialog({ isOpen, setIsOpen }: MyProfilesDialogProps) {
   const { address } = useAccount()
-  const { profile, setProfile } = useContext(UserContext)
-  // const [isOpen, setIsOpen] = useState(false)
+  const currentUser = useAppPersistStore((state) => state.currentUser);
+  const setCurrentUser = useAppPersistStore((state) => state.setCurrentUser);
   const [loading, setLoading] = useState(false)
   const [items, setItem] = useState<Profile[]>([])
 
@@ -38,7 +36,8 @@ function MyProfilesDialog({ isOpen, setIsOpen }: MyProfilesDialogProps) {
   const handleSetProfile = (profile: Profile) => {
     setIsOpen(false)
     console.log('setIsOpen', isOpen)
-    setProfile && setProfile(profile)
+    // setProfile && setProfile(profile)
+    setCurrentUser && setCurrentUser(profile)
   }
 
   return (
@@ -49,7 +48,7 @@ function MyProfilesDialog({ isOpen, setIsOpen }: MyProfilesDialogProps) {
             items.map((item) => {
               return (
                 <div key={item.id} onClick={() => { handleSetProfile(item) }} className='flex items-center cursor-pointer px-4 py-2 mx-auto'>
-                  <Avatar avatarUrl={item.avatarUrl}></Avatar>
+                  <Avatar avatarUrl={getAvatarUrl(item)}></Avatar>
                   <span className='ml-2'>
                     {item.name}
                   </span>

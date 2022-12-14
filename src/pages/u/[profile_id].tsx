@@ -14,6 +14,7 @@ import { Profile } from '@generated/types';
 import { Button } from '@components/ui';
 import { useDisconnect, useSignTypedData } from 'wagmi';
 import { useCreateBurnProfileTypedDataMutation } from '@generated/types';
+import { BigNumber } from 'ethers';
 
 const ProfileArea = (profile: Profile) => {
   const [createBurnProfileTypedDataMutation, { data, loading, error }] = useCreateBurnProfileTypedDataMutation({
@@ -71,7 +72,11 @@ const ProfileArea = (profile: Profile) => {
             { name: 'deadline', type: 'uint256' }
           ],
         },
-        value: typedData.value
+        value: {
+          tokenId: BigNumber.from(typedData.value.tokenId),
+          nonce: BigNumber.from(typedData.value.nonce),
+          deadline: BigNumber.from(typedData.value.deadline),
+        }
       })
     }
   }, [data])

@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Disclosure } from '@headlessui/react';
 import { MenuIcon, XIcon } from '@heroicons/react/outline';
+import { PencilIcon } from '@heroicons/react/solid';
 
 import { Button } from '@components/ui';
 import LoginButton from './user_button';
@@ -28,10 +29,6 @@ const NavItems = () => {
       name: 'Home',
       to: '/',
     },
-    // {
-    //   name: 'Explore',
-    //   to: '/explore',
-    // },
     {
       name: 'Following',
       to: '/following',
@@ -59,7 +56,7 @@ const Navbar = () => {
   const modalContext = useContext(ModalContext);
 
   const handleOpenQuestionDialog = () => {
-    modalContext.questionDialog.setOpen(true);
+    modalContext?.questionDialog && modalContext.questionDialog.setOpen(true);
   }
   return (
     <Disclosure as='header' className='sticky top-0 w-full bg-white border-b z-10'>
@@ -79,8 +76,11 @@ const Navbar = () => {
             </div>
             <div className='flex-1'></div>
             <div className="flex gap-4 items-center mr-4">
-              {/* <QuestionDialog /> */}
-              <Button variant='primary' onClick={handleOpenQuestionDialog}>Ask a Question</Button>
+              <Button variant='primary' onClick={handleOpenQuestionDialog} icon={<PencilIcon />} className='hidden sm:flex' size='md'>
+                Ask a Question
+              </Button>
+              <Button variant='primary' onClick={handleOpenQuestionDialog} icon={<PencilIcon />} className='sm:hidden' size='lg'>
+              </Button>
               <LoginButton />
             </div>
           </div>

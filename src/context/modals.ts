@@ -6,7 +6,7 @@ export interface ModalContextType {
 }
 
 export interface Modals {
-  questionDialog: ModalContextType;
+  questionDialog?: ModalContextType;
 }
 
 export const ModalContext = createContext<Modals>({})
