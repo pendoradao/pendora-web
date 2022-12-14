@@ -24,7 +24,7 @@ export const Input = forwardRef<HTMLInputElement, Props>(function Input(
   const id = useId();
 
   const iconStyles = [
-    'text-zinc-500 [&>*]:peer-focus:text-brand-500 [&>*]:h-5',
+    'text-zinc-500 [&>*]:peer-focus:text-primary-500 [&>*]:h-5',
     { '!text-red-500 [&>*]:peer-focus:!text-red-500': error }
   ];
 
@@ -32,13 +32,13 @@ export const Input = forwardRef<HTMLInputElement, Props>(function Input(
     <label className="w-full" htmlFor={id}>
       {label && (
         <div className="flex items-center mb-1 space-x-1.5">
-          <div className="font-medium text-gray-800 dark:text-gray-200">{label}</div>
+          <div className="font-medium text-gray-800">{label}</div>
           {/* <HelpTooltip content={helper} /> */}
         </div>
       )}
       <div className="flex">
         {prefix && (
-          <span className="inline-flex items-center px-3 text-gray-500 bg-gray-100 rounded-l-xl border border-r-0 border-gray-300 dark:bg-gray-900 dark:border-gray-700/80">
+          <span className="inline-flex items-center px-3 text-gray-500 bg-gray-100 rounded-l-xl border border-r-0 border-gray-300">
             {prefix}
           </span>
         )}
@@ -49,14 +49,14 @@ export const Input = forwardRef<HTMLInputElement, Props>(function Input(
             {
               'opacity-60 bg-gray-500 bg-opacity-20': props.disabled
             },
-            'flex items-center border bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700/80 focus-within:border-brand-500 focus-within:ring-brand-400 w-full px-1'
+            'flex items-center border rounded bg-white border-zinc-300 focus-within:border-primary-500 focus-within:ring-primary-400  w-full px-1 py-1'
           )}
         >
           <input
             id={id}
             className={clsx(
               { 'placeholder-red-500': error },
-              'peer border-none focus:ring-0 outline-none bg-transparent w-full',
+              'peer border-none outline-none bg-transparent w-full',
               className
             )}
             type={type}

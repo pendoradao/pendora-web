@@ -1,19 +1,41 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import Cookies from 'js-cookie';
 
 import { LOCAL_STORAGE_KEY } from '@constants';
 import { useAppPersistStore } from '@store/app';
-import { getProfile, getAvatarUrl, deleteProfile } from '@lib/profile';
+import { ContractContext } from '@store/contract';
+import { getProfile, getAvatarUrl } from '@lib/profile';
 import { getPublications } from '@lib/publication';
 import { GridLayout } from '@components/ui';
-import { Profile, Publication } from '@types';
+import { Publication } from '@types';
+import { Profile } from '@generated/types';
 import { Button } from '@components/ui';
-import { useDisconnect } from 'wagmi';
+import { useDisconnect, useSignTypedData } from 'wagmi';
+import { useCreateBurnProfileTypedDataMutation } from '@generated/types';
+import { BigNumber } from 'ethers';
 
 const ProfileArea = (profile: Profile) => {
+  const [createBurnProfileTypedDataMutation, { data, loading, error }] = useCreateBurnProfileTypedDataMutation({
+    variables: {
+      request: {
+        profileId: profile.id,
+      }
+    },
+  });
+  // const [ typedData, setTypedData ] = useState<any>(null)
+  const { data: txData, isError, isLoading, isSuccess, status, signTypedData } = useSignTypedData({
+    onError(error) {
+      console.error(error?.message);
+    },
+    onSuccess(data) {
+      console.log(data)
+    }
+  })
+
   const { disconnect } = useDisconnect();
+  const { lensHub } = useContext(ContractContext)
   const currentUser = useAppPersistStore(state => state.currentUser)
   const setCurrentUser = useAppPersistStore(state => state.setCurrentUser)
   const isMe = currentUser?.id === profile.id
@@ -27,9 +49,41 @@ const ProfileArea = (profile: Profile) => {
   }
 
   const handleDeleteProfile = async () => {
-    currentUser?.id && await deleteProfile(currentUser.id)
-    logout()
+    currentUser?.id && await createBurnProfileTypedDataMutation(currentUser.id)
+    // logout()
   }
+
+  useEffect(() => {
+    if (data) {
+      var { typedData } = data.createBurnProfileTypedData
+      console.log(typedData)
+      delete typedData.value.__typename
+      signTypedData({
+        domain: {
+          chainId: typedData.domain.chainId,
+          name: typedData.domain.name,
+          verifyingContract: typedData.domain.verifyingContract,
+          version: typedData.domain.version,
+        },
+        types: {
+          'BurnWithSig': [
+            { name: 'tokenId', type: 'uint256' },
+            { name: 'nonce', type: 'uint256' },
+            { name: 'deadline', type: 'uint256' }
+          ],
+        },
+        value: {
+          tokenId: BigNumber.from(typedData.value.tokenId),
+          nonce: BigNumber.from(typedData.value.nonce),
+          deadline: BigNumber.from(typedData.value.deadline),
+        }
+      })
+    }
+  }, [data])
+
+  useEffect(() => {
+    console.log({ txData, status })
+  }, [txData, status])
 
   return (
     <div className='flex flex-col justify-center items-center gap-2'>
@@ -47,7 +101,7 @@ const ProfileArea = (profile: Profile) => {
           </>
         )
       }
-      
+
     </div>
   )
 }
@@ -76,6 +130,17 @@ const UserPage: NextPage = () => {
   const [isMe, setIsMe] = useState(false)
 
   useEffect(() => {
+    async function fetchProfile() {
+      try {
+        const profile = await getProfile(profileId)
+        setProfile(profile)
+        const pubs = await getPublications(profile.id, 20)
+        setPublications(pubs.items)
+      } catch (err) {
+        console.log({ err })
+      }
+    }
+
     if (profileId) {
       fetchProfile()
     }
@@ -83,23 +148,13 @@ const UserPage: NextPage = () => {
       setIsMe(true)
     }
   }, [profileId, currentUser])
-  async function fetchProfile() {
-    try {
-      const profile = await getProfile(profileId)
-      setProfile(profile)
-      const pubs = await getPublications(profile.id, 20)
-      setPublications(pubs.items)
-    } catch (err) {
-      console.log({ err })
-    }
-  }
 
   if (!profile) return null
 
   return (
     <GridLayout className='mt-8'>
       <div className='lg:col-span-3 lg:col-start-2 md:col-span-12 col-span-12 mb-5'>
-        <ProfileArea {...profile}/>
+        <ProfileArea {...profile} />
       </div>
       <div className='lg:col-span-6 lg:col-start-6 md:col-span-12 col-span-12 mb-5'>
         <PublicationArea publications={publications} />

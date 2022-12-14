@@ -2,6 +2,8 @@ import clsx from 'clsx';
 import type { ButtonHTMLAttributes, DetailedHTMLProps, ReactNode } from 'react';
 import { forwardRef } from 'react';
 
+import { Spinner } from '@components/ui';
+
 interface Props extends DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> {
   size?: 'sm' | 'md' | 'lg';
   variant?: 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'danger';
@@ -17,49 +19,39 @@ export const Button = forwardRef<HTMLButtonElement, Props>(function Button(
   { className = '', size = 'md', variant = 'primary', outline, light, loading, icon, children, ...rest },
   ref
 ) {
+  const disabled = rest.disabled || loading;
   return (
     <button
       ref={ref}
       className={clsx(
+        // have to do this wired thing or color will not be applied
+        // 'bg-primary-600 bg-secondary-600 bg-success-600 bg-info-600 bg-warning-600 bg-danger-600', 
+        // 'hover:bg-primary-700 hover:bg-secondary-700 hover:bg-success-700 hover:bg-info-700 hover:bg-warning-700 hover:bg-danger-700',
+        // 'hover:bg-primary-100 hover:bg-secondary-100 hover:bg-success-100 hover:bg-info-100 hover:bg-warning-100 hover:bg-danger-100',
+        // 'border-primary-200 border-secondary-200 border-success-200 border-info-200 border-warning-200 border-danger-200',
+        // 'text-primary-500 text-secondary-500 text-success-500 text-info-500 text-warning-500 text-danger-500',
+        !outline && !light && `bg-${variant}-600 border text-white`,
+        !outline && !light && !disabled && `hover:bg-${variant}-700`,
+        outline && !light && `border border-${variant}-200 text-${variant}-500`,
+        outline && !light && !disabled && `hover:bg-${variant}-100`,
+        light && 'border-none !shadow-none text-primary-500 hover:text-primary-700',
+        (icon || loading) && 'flex items-center space-x-1.5 shrink-0',
         {
-          'bg-brand-500 hover:bg-brand-600 border border-brand-600 text-white focus:ring-brand-400':
-            !outline && !light && variant === 'primary',
-          'bg-gray-500 hover:bg-gray-600 border border-gray-600 text-white focus:ring-gray-400':
-            !outline && !light && variant === 'secondary',
-          'bg-green-500 hover:bg-green-400 border border-green-600 text-white focus:ring-green-400':
-            !outline && !light && variant === 'success',
-          'bg-yellow-500 hover:bg-yellow-400 border border-yellow-600 text-white focus:ring-yellow-400':
-            !outline && !light && variant === 'warning',
-          'bg-pink-500 hover:bg-pink-400 border border-pink-600 text-white focus:ring-pink-400':
-            !outline && !light && variant === 'info',
-          'bg-red-500 hover:bg-red-400 border border-red-600 text-white focus:ring-red-400':
-            !outline && !light && variant === 'danger',
-          'border border-brand-200 text-brand hover:bg-brand-100 focus:ring-brand-400':
-            outline && !light && variant === 'primary',
-          'border border-gray-200 text-gray-500 hover:bg-gray-100 focus:ring-gray-400':
-            outline && !light && variant === 'secondary',
-          'border border-green-200 text-green-500 hover:bg-green-100 focus:ring-green-400':
-            outline && !light && variant === 'success',
-          'border border-yellow-200 text-yellow-500 hover:bg-yellow-100 focus:ring-yellow-400':
-            outline && !light && variant === 'warning',
-          'border border-pink-200 text-pink-500 hover:bg-pink-100 focus:ring-pink-400':
-            outline && !light && variant === 'info',
-          'border border-red-200 text-red-500 hover:bg-red-100 focus:ring-red-400':
-            outline && !light && variant === 'danger',
-          'border-none !shadow-none text-gray-500': light,
           'px-2 py-0.5': size === 'sm',
           'px-3 py-1': size === 'md',
-          'px-4 py-1.5': size === 'lg',
-          'flex items-center space-x-1.5 shrink-0': icon && children
+          'px-4 py-1.5': size === 'lg'
         },
-        'font-bold disabled:opacity-50 shadow-sm focus:ring-2 focus:ring-opacity-50 focus:ring-offset-1 outline-none',
+        'font-bold disabled:opacity-50 shadow-sm outline-none rounded',
         className
       )}
-      disabled={loading}
-      type={rest.type}
+      disabled={disabled}
       {...rest}
     >
-      {icon && <span className="w-5">{icon}</span>}
+      {
+        (icon || loading) && <span className="w-5">
+          {loading? <Spinner variant={variant} size='xs'/>: icon}
+        </span>
+      }
       <div>{children}</div>
     </button>
   );

@@ -1,19 +1,9 @@
 /* eslint-disable no-unused-vars */
-import { createContext } from "react";
 import create from 'zustand';
 import { persist } from 'zustand/middleware';
 
-import { Profile } from "@types";
+import { Profile } from "@generated/types";
 import { LOCAL_STORAGE_KEY } from "@constants";
-
-export interface IUserContext {
-  token?: string;
-  setToken?: (token: string) => void;
-  profile?: Profile;
-  setProfile?: (profile: Profile) => void;
-}
-
-export const UserContext = createContext<IUserContext>({});
 
 interface AppState {
   profiles: Profile[] | [];

@@ -1,0 +1,4 @@
+Command : npm run lint
+Description : Check for linting errors
+Command : npm run codegen
+Description : Generate types from GraphQL

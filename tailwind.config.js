@@ -12,11 +12,15 @@ module.exports = {
     },
     extend: {
       colors: {
-        gray: colors.zinc,
-        green: colors.emerald,
-        purple: colors.violet,
-        yellow: colors.yellow,
-        brand: colors.indigo
+        brand: colors.fuchsia,
+        background: "#fffcf8",
+        surface: "#fff",
+        primary: colors.zinc,
+        secondary: colors.fuchsia,
+        success: colors.green,
+        info: colors.yellow,
+        warning: colors.orange,
+        danger: colors.red,
       }
     }
   },

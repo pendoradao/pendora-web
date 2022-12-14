@@ -1,5 +1,4 @@
 import { gql, useQuery } from '@apollo/client';
-import { FC } from 'react';
 import { Button, Spinner, } from '@components/ui';
 import { ArrowRightIcon } from '@heroicons/react/outline';
 import { IS_MAINNET } from '@constants';
