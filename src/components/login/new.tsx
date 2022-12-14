@@ -2,7 +2,6 @@ import { gql, useMutation } from '@apollo/client';
 import { ChangeEvent, FC, useState } from 'react';
 import { useAccount } from 'wagmi';
 import { object, string } from 'zod';
-import { PlusIcon } from '@heroicons/react/outline';
 
 import { Form, useZodForm, Button, Spinner, Message, Input, ChooseFile } from '@components/ui';
 import { APP_NAME, HANDLE_REGEX } from '@constants';
@@ -88,7 +87,7 @@ const NewProfile = () => {
           <div className="text-xl font-bold">Signup to {APP_NAME}</div>
         </div>
 
-      <Input label="Handle" type="text" placeholder="gavin" {...form.register('handle')} />
+      <Input required label="Handle" type="text" placeholder="who" {...form.register('handle')} className="after:content-['*']"/>
       <div className="space-y-1.5">
         <div className="label">Avatar</div>
         <div className="space-y-3">
@@ -108,8 +107,7 @@ const NewProfile = () => {
       <Button
         className="ml-auto"
         type="submit"
-        disabled={loading}
-        icon={loading ? <Spinner size="xs" /> : <PlusIcon className="w-4 h-4" />}
+        loading={loading}
       >
         Signup
       </Button>

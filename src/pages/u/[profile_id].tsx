@@ -2,6 +2,10 @@ import { useEffect, useState, useContext } from 'react';
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import Cookies from 'js-cookie';
+import { useDisconnect, useSignTypedData } from 'wagmi';
+import { splitSignature } from 'ethers/lib/utils';
+import { BigNumber } from 'ethers';
+import { useAccount  } from 'wagmi';
 
 import { LOCAL_STORAGE_KEY } from '@constants';
 import { useAppPersistStore } from '@store/app';
@@ -12,11 +16,17 @@ import { GridLayout } from '@components/ui';
 import { Publication } from '@types';
 import { Profile } from '@generated/types';
 import { Button } from '@components/ui';
-import { useDisconnect, useSignTypedData } from 'wagmi';
 import { useCreateBurnProfileTypedDataMutation } from '@generated/types';
-import { BigNumber } from 'ethers';
+import type { CreateBurnProfileTypedDataMutation } from '@generated/types';
 
 const ProfileArea = (profile: Profile) => {
+  const currentUser = useAppPersistStore(state => state.currentUser)
+  const { address, isConnecting } = useAccount()
+  const setCurrentUser = useAppPersistStore(state => state.setCurrentUser)
+  const { disconnect } = useDisconnect();
+  const { lensHub } = useContext(ContractContext)
+  const isMe = (currentUser?.id === profile.id) && isConnecting && (address === currentUser?.ownedBy)
+
   const [createBurnProfileTypedDataMutation, { data, loading, error }] = useCreateBurnProfileTypedDataMutation({
     variables: {
       request: {
@@ -24,21 +34,11 @@ const ProfileArea = (profile: Profile) => {
       }
     },
   });
-  // const [ typedData, setTypedData ] = useState<any>(null)
-  const { data: txData, isError, isLoading, isSuccess, status, signTypedData } = useSignTypedData({
+  const { data: signature, isError, isLoading, isSuccess, status, signTypedData } = useSignTypedData({
     onError(error) {
       console.error(error?.message);
     },
-    onSuccess(data) {
-      console.log(data)
-    }
   })
-
-  const { disconnect } = useDisconnect();
-  const { lensHub } = useContext(ContractContext)
-  const currentUser = useAppPersistStore(state => state.currentUser)
-  const setCurrentUser = useAppPersistStore(state => state.setCurrentUser)
-  const isMe = currentUser?.id === profile.id
 
   const logout = () => {
     setCurrentUser(null);
@@ -48,42 +48,62 @@ const ProfileArea = (profile: Profile) => {
     if (disconnect) disconnect();
   }
 
+  const handleBurnProfile = async (signature: string, data: CreateBurnProfileTypedDataMutation) => {
+    console.log('burn profile: signature', signature);
+    if (lensHub) {
+      var { typedData } = data.createBurnProfileTypedData
+      const { v, r, s } = splitSignature(signature);
+      const tx = lensHub.burnWithSig(typedData.value.tokenId, {
+        v,
+        r,
+        s,
+        deadline: typedData.value.deadline,
+      });
+    }
+  }
+
+  const handleSignTypedData = async (data: CreateBurnProfileTypedDataMutation) => {
+    var { typedData } = data.createBurnProfileTypedData
+    console.log('burn profile: typedData', typedData);
+    await signTypedData({
+      domain: {
+        chainId: typedData.domain.chainId,
+        name: typedData.domain.name,
+        verifyingContract: typedData.domain.verifyingContract,
+        version: typedData.domain.version,
+      },
+      types: {
+        'BurnWithSig': [
+          { name: 'tokenId', type: 'uint256' },
+          { name: 'nonce', type: 'uint256' },
+          { name: 'deadline', type: 'uint256' }
+        ],
+      },
+      value: {
+        tokenId: BigNumber.from(typedData.value.tokenId),
+        nonce: BigNumber.from(typedData.value.nonce),
+        deadline: BigNumber.from(typedData.value.deadline),
+      }
+    })
+  }
+
   const handleDeleteProfile = async () => {
     currentUser?.id && await createBurnProfileTypedDataMutation(currentUser.id)
-    // logout()
   }
 
   useEffect(() => {
     if (data) {
-      var { typedData } = data.createBurnProfileTypedData
-      console.log(typedData)
-      delete typedData.value.__typename
-      signTypedData({
-        domain: {
-          chainId: typedData.domain.chainId,
-          name: typedData.domain.name,
-          verifyingContract: typedData.domain.verifyingContract,
-          version: typedData.domain.version,
-        },
-        types: {
-          'BurnWithSig': [
-            { name: 'tokenId', type: 'uint256' },
-            { name: 'nonce', type: 'uint256' },
-            { name: 'deadline', type: 'uint256' }
-          ],
-        },
-        value: {
-          tokenId: BigNumber.from(typedData.value.tokenId),
-          nonce: BigNumber.from(typedData.value.nonce),
-          deadline: BigNumber.from(typedData.value.deadline),
-        }
-      })
+      handleSignTypedData(data)
+    } else if (error) {
+      console.log(error)
     }
-  }, [data])
+  }, [data, loading, error])
 
   useEffect(() => {
-    console.log({ txData, status })
-  }, [txData, status])
+    if (signature && data) {
+      handleBurnProfile(signature, data)
+    }
+  }, [signature])
 
   return (
     <div className='flex flex-col justify-center items-center gap-2'>
@@ -101,7 +121,6 @@ const ProfileArea = (profile: Profile) => {
           </>
         )
       }
-
     </div>
   )
 }

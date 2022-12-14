@@ -12,13 +12,14 @@ interface Props extends Omit<ComponentProps<'input'>, 'prefix'> {
   prefix?: string | ReactNode;
   iconLeft?: ReactNode;
   iconRight?: ReactNode;
+  required?: boolean;
   className?: string;
   helper?: ReactNode;
   error?: boolean;
 }
 
 export const Input = forwardRef<HTMLInputElement, Props>(function Input(
-  { label, prefix, type = 'text', iconLeft, iconRight, error, className = '', helper, ...props },
+  { label, prefix, type = 'text', iconLeft, iconRight, error, required, className = '', helper, ...props },
   ref
 ) {
   const id = useId();
@@ -32,7 +33,7 @@ export const Input = forwardRef<HTMLInputElement, Props>(function Input(
     <label className="w-full" htmlFor={id}>
       {label && (
         <div className="flex items-center mb-1 space-x-1.5">
-          <div className="font-medium text-gray-800">{label}</div>
+          <div className={clsx("font-medium text-gray-800", {"after:content-['*'] after:text-red-500": required})}>{label}</div>
           {/* <HelpTooltip content={helper} /> */}
         </div>
       )}
