@@ -9,7 +9,7 @@ import { useAccount  } from 'wagmi';
 
 import { LOCAL_STORAGE_KEY } from '@constants';
 import { useAppPersistStore } from '@store/app';
-import { ContractContext } from '@store/contract';
+import { ContractContext } from '@context/contract';
 import { getProfile, getAvatarUrl } from '@lib/profile';
 import { getPublications } from '@lib/publication';
 import { GridLayout } from '@components/ui';

@@ -1,43 +1,10 @@
-import { ReactNode, useEffect, useState } from 'react'
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
-import { ApolloProvider } from '@apollo/client';
-import { WagmiConfig, useContract, useSigner } from 'wagmi';
+import { WagmiConfig } from 'wagmi';
 import '@/styles/globals.css'
 
-import Layout from '@/components/layout'
+import ContextedApp from '@/components/context'
 import { client } from '@lib/eth';
-import { client as apolloClient } from '@lib/request';
-import { LENSHUB_PROXY } from "@constants";
-import { ContractContext } from '@store/contract';
-import LensHubABI from "@abi/lens_hub_contract_abi.json";
-
-function ContextedApp({ children }: { children: ReactNode }) {
-  const { data: signer } = useSigner({
-    onSuccess(data) {
-      console.log('Success', data)
-    },
-    onError(error) {
-      console.error(error?.message);
-    }
-  })
-
-  const lensHub = useContract({
-    address: LENSHUB_PROXY,
-    abi: LensHubABI,
-    signerOrProvider: signer,
-  })
-
-  return (
-    <ApolloProvider client={apolloClient}>
-      <ContractContext.Provider value={{ lensHub: lensHub }}>
-        <Layout>
-          {children}
-        </Layout>
-      </ContractContext.Provider>
-    </ApolloProvider>
-  )
-}
 
 function MyApp({ Component, pageProps }: AppProps) {
   console.log('rendering app')
