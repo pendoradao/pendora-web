@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { object, string } from 'zod';
 
 import { Button, Modal, Textarea, Input, Form, useZodForm } from '@components/ui';
@@ -20,7 +19,6 @@ interface DialogProps {
 }
 
 const QuestionDialog = ({open, setOpen}: DialogProps) => {
-  // const [open, setOpen] = useState(true);
   const form = useZodForm({
     schema: questionSchema
   });

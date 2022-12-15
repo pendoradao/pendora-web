@@ -8,8 +8,7 @@ import { PencilIcon } from '@heroicons/react/solid';
 
 import { Button } from '@components/ui';
 import LoginButton from './user_button';
-// import QuestionDialog from '@components/publication/question_dialog';
-import { ModalContext } from '@context/modals';
+import { GlobalModalsContext } from '@context/modals';
 
 const NavButton = ({ open }: { open: boolean }) => {
   return (
@@ -53,7 +52,7 @@ const NavItems = () => {
 
 const Navbar = () => {
   const { pathname, push } = useRouter();
-  const modalContext = useContext(ModalContext);
+  const modalContext = useContext(GlobalModalsContext);
 
   const handleOpenQuestionDialog = () => {
     modalContext?.questionDialog && modalContext.questionDialog.setOpen(true);

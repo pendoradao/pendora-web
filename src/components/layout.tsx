@@ -1,29 +1,45 @@
 import { ReactNode, useState } from 'react'
+
 import QuestionDialog from '@components/publication/question_dialog';
-import { ModalContext, Modals } from '@context/modals';
+import LoginDialog from '@components/login/login_dialog';
+import { GlobalModalsContext, GlobalModalsContextType } from '@context/modals';
+
 import Footer from './footer'
 import Narbar from './navbar'
 
-
 export default function Layout({ children }: { children: ReactNode }) {
   const [questionDialogOpen, setQuestionDialogOpen] = useState<boolean>(false);
-  const modalContext = {
+  const [LoginDialogOpen, setLoginDialogOpen] = useState<boolean>(false);
+  const globalModalsContext = {
     questionDialog: {
       open: questionDialogOpen,
       setOpen: setQuestionDialogOpen,
     },
-  } as Modals;
+    loginDialog: {
+      open: LoginDialogOpen,
+      setOpen: setLoginDialogOpen,
+    } 
+  } as GlobalModalsContextType;
 
   return (
     <>
-      <ModalContext.Provider value={modalContext}>
-        <QuestionDialog open={questionDialogOpen} setOpen={setQuestionDialogOpen}></QuestionDialog>
+      <GlobalModalsContext.Provider value={globalModalsContext}>
+        <>
+          <QuestionDialog 
+            open={globalModalsContext.questionDialog.open} 
+            setOpen={globalModalsContext.questionDialog.setOpen}
+          ></QuestionDialog>
+          <LoginDialog
+            open={globalModalsContext.loginDialog.open}
+            setOpen={globalModalsContext.loginDialog.setOpen}
+          ></LoginDialog>
+        </>
         <Narbar />
         <div className="min-h-screen" style={{ minHeight: '100vh', marginTop: 12 }}>
           <main>{children}</main>
         </div>
         <Footer />
-      </ModalContext.Provider>
+      </GlobalModalsContext.Provider>
     </>
   )
 }

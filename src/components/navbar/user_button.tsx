@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useRouter } from 'next/router';
 import { useDisconnect } from 'wagmi'
 import Cookies from 'js-cookie';
@@ -6,8 +6,9 @@ import Cookies from 'js-cookie';
 import { Avatar, Menu, Modal } from '@components/ui';
 import { getAvatarUrl } from '@lib/profile';
 import { useAppPersistStore, useAppStore } from '@store/app';
-import Login from '@components/login';
+// import Login from '@components/login';
 import { LOCAL_STORAGE_KEY } from '@constants';
+import { GlobalModalsContext } from '@context/modals';
 
 interface MenuItemType {
   label: string;
@@ -22,7 +23,8 @@ const UserButton = () => {
     setDomLoaded(true);
   }, []);
 
-  const [showLoginModal, setShowLoginModal] = useState<boolean>(false);
+  // const [showLoginModal, setShowLoginModal] = useState<boolean>(false);
+  const { loginDialog } = useContext(GlobalModalsContext);
   const { disconnect } = useDisconnect();
 
   const profiles = useAppStore((state) => state.profiles);
@@ -33,13 +35,21 @@ const UserButton = () => {
   const staffMode = useAppPersistStore((state) => state.staffMode);
   const setStaffMode = useAppPersistStore((state) => state.setStaffMode);
 
+  const startLogin: () => void = () => {
+    loginDialog.setOpen(true);
+  }
+
+  const endLogin: () => void = () => {
+    loginDialog.setOpen(false);
+  }
+
   useEffect(() => {
     if (isAuthenticated && !currentUser) {
       const user = profiles.find((profile) => profile.id === localStorage.getItem(LOCAL_STORAGE_KEY));
       setCurrentUser(user || null);
     }
     if (isAuthenticated && currentUser) {
-      setShowLoginModal(false);
+      startLogin();
     }
   }, [isAuthenticated, currentUser, profiles, setCurrentUser]);
 
@@ -63,7 +73,7 @@ const UserButton = () => {
     [
       {
         label: 'Sign in with Lens',
-        onClick: () => setShowLoginModal(true),
+        onClick: () => startLogin(),
       }
     ],
     [
@@ -78,7 +88,7 @@ const UserButton = () => {
     [
       {
         label: 'Sign in with Lens',
-        onClick: () => setShowLoginModal(true),
+        onClick: () => startLogin(),
       }
     ]
   ]
@@ -104,19 +114,9 @@ const UserButton = () => {
   }
 
   return (
-    <>
-      <Modal
-        title="Login"
-        open={showLoginModal}
-        setOpen={setShowLoginModal}
-        className='w-full md:w-1/4 '
-      >
-        <Login />
-      </Modal>
-      <Menu items={menuItemsGroups} classNameMenu='h-12'>  {/* fix menu height*/}
-        <Avatar avatarUrl={currentUser && getAvatarUrl(currentUser)}></Avatar>
-      </Menu>
-    </>
+    <Menu items={menuItemsGroups} classNameMenu='h-12'>  {/* fix menu height*/}
+      <Avatar avatarUrl={currentUser && getAvatarUrl(currentUser)}></Avatar>
+    </Menu>
   )
 }
 
