@@ -21,11 +21,11 @@ import type { CreateBurnProfileTypedDataMutation } from '@generated/types';
 
 const ProfileArea = (profile: Profile) => {
   const currentUser = useAppPersistStore(state => state.currentUser)
-  const { address, isConnecting } = useAccount()
+  const { address } = useAccount()
   const setCurrentUser = useAppPersistStore(state => state.setCurrentUser)
   const { disconnect } = useDisconnect();
   const { lensHub } = useContext(ContractContext)
-  const isMe = (currentUser?.id === profile.id) && isConnecting && (address === currentUser?.ownedBy)
+  const isMe = (currentUser?.id === profile.id) && (address === currentUser?.ownedBy)
 
   const [createBurnProfileTypedDataMutation, { data, loading, error }] = useCreateBurnProfileTypedDataMutation({
     variables: {
@@ -117,7 +117,7 @@ const ProfileArea = (profile: Profile) => {
         isMe && (
           <>
             {/* <Button outline className='w-4/5'>Edit Profile</Button> */}
-            <Button variant='danger' className='w-4/5' onClick={handleDeleteProfile}>Delete Profile</Button>
+            <Button variant='danger' className='w-4/5' onClick={handleDeleteProfile} loading={loading || isLoading}>Delete Profile</Button>
           </>
         )
       }
