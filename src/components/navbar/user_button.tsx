@@ -23,7 +23,6 @@ const UserButton = () => {
     setDomLoaded(true);
   }, []);
 
-  // const [showLoginModal, setShowLoginModal] = useState<boolean>(false);
   const { loginDialog } = useContext(GlobalModalsContext);
   const { disconnect } = useDisconnect();
 
@@ -49,7 +48,7 @@ const UserButton = () => {
       setCurrentUser(user || null);
     }
     if (isAuthenticated && currentUser) {
-      startLogin();
+      endLogin();
     }
   }, [isAuthenticated, currentUser, profiles, setCurrentUser]);
 

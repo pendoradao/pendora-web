@@ -1,5 +1,4 @@
 import { Modal } from '@components/ui';
-
 import Login from '@components/login';
 
 interface DialogProps {

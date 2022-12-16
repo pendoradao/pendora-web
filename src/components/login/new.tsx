@@ -1,24 +1,12 @@
-import { gql, useMutation } from '@apollo/client';
-import { ChangeEvent, FC, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
+import { useMutation } from '@apollo/client';
 import { useAccount } from 'wagmi';
 import { object, string } from 'zod';
 
+import { CreateProfileDocument } from '@generated/types';
 import { Form, useZodForm, Button, Spinner, Message, Input, ChooseFile } from '@components/ui';
 import { APP_NAME, HANDLE_REGEX } from '@constants';
 import Pending from './pending';
-
-const CREATE_PROFILE_MUTATION = gql`
-  mutation CreateProfile($request: CreateProfileRequest!) {
-    createProfile(request: $request) {
-      ... on RelayerResult {
-        txHash
-      }
-      ... on RelayError {
-        reason
-      }
-    }
-  }
-`;
 
 const newUserSchema = object({
   handle: string()
@@ -37,7 +25,7 @@ const NewProfile = () => {
   const [avatar, setAvatar] = useState('');
   const [uploading, setUploading] = useState(false);
   const { address } = useAccount();
-  const [createProfile, { data, loading }] = useMutation(CREATE_PROFILE_MUTATION);
+  const [createProfile, { data, loading, error }] = useMutation(CreateProfileDocument);
 
   const form = useZodForm({
     schema: newUserSchema
@@ -55,6 +43,17 @@ const NewProfile = () => {
       setUploading(false);
     }
   };
+
+  useEffect(() => {
+    if (error) {
+      console.error(error);
+      form.setError('handle', {
+        type: 'manual',
+        message: error.message
+      });
+    }
+  }, [error]);
+
 
   return data?.createProfile.__typename === 'RelayerResult' && data?.createProfile.txHash ? (
     <Pending handle={form.getValues('handle')} txHash={data?.createProfile?.txHash} />
@@ -78,16 +77,16 @@ const NewProfile = () => {
         <Message
           className="mb-3"
           title="Create profile failed!"
-          content={'error'}
+          content={data?.createProfile?.reason}
         />
       )}
 
-        <div className="mb-2 space-y-4">
-          {/* <img className="w-10 h-10" height={40} width={40} src="/logo.svg" alt="Logo" /> */}
-          <div className="text-xl font-bold">Signup to {APP_NAME}</div>
-        </div>
+      <div className="mb-2 space-y-4">
+        {/* <img className="w-10 h-10" height={40} width={40} src="/logo.svg" alt="Logo" /> */}
+        <div className="text-xl font-bold">Signup to {APP_NAME}</div>
+      </div>
 
-      <Input required label="Handle" type="text" placeholder="who" {...form.register('handle')} className="after:content-['*']"/>
+      <Input required label="Handle" type="text" placeholder="who" {...form.register('handle')} className="after:content-['*']" />
       <div className="space-y-1.5">
         <div className="label">Avatar</div>
         <div className="space-y-3">
