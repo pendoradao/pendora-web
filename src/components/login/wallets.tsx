@@ -20,7 +20,6 @@ const SwitchNetwork = () => {
 interface Props {
   setHasConnected: Dispatch<boolean>;
   setHasProfile: Dispatch<boolean>;
-  // setOpen: Dispatch<boolean>;
 }
 
 const Wallets = ({ setHasConnected, setHasProfile }: Props) => {

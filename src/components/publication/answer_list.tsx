@@ -3,7 +3,7 @@ import { PencilIcon } from '@heroicons/react/solid';
 
 import { Question, Post } from '@types';
 import { Button } from '@components/ui';
-import AnswerDialog from '@components/answer_dialog';
+import AnswerDialog from '@components/publication/answer_dialog';
 import SinglePublication from './single_publication';
 import QuestionCard from './question_card';
 
@@ -40,7 +40,7 @@ export const AnswerList = (answerListProps: AnswerListProps) => {
             <>
               <QuestionCard {...question} />
               <div className='flex'>
-                <Button icon={<PencilIcon/>} outline onClick={()=>setOpen(true)}> Answer</Button>
+                <Button icon={<PencilIcon/>} variant="primary" onClick={()=>setOpen(true)}> Answer</Button>
                 <AnswerDialog open={open} setOpen={setOpen} question={question}/>
               </div>
             </>

@@ -3,50 +3,13 @@ import axios from 'axios';
 import Cookies, { CookieAttributes } from 'js-cookie';
 import jwtDecode from 'jwt-decode';
 
+import result from '@generated/types';
 import { API_URL } from '@constants';
-
-export interface PossibleTypesResultData {
-  possibleTypes: {
-    [key: string]: string[];
-  };
-}
-
-const result: PossibleTypesResultData = {
-  possibleTypes: {
-    CollectModule: [
-      'FeeCollectModuleSettings',
-      'FreeCollectModuleSettings',
-      'LimitedFeeCollectModuleSettings',
-      'LimitedTimedFeeCollectModuleSettings',
-      'RevertCollectModuleSettings',
-      'TimedFeeCollectModuleSettings'
-    ],
-    FollowModule: ['FeeFollowModuleSettings', 'ProfileFollowModuleSettings', 'RevertFollowModuleSettings'],
-    MainPostReference: ['Mirror', 'Post'],
-    MentionPublication: ['Comment', 'Post'],
-    MirrorablePublication: ['Comment', 'Post'],
-    Notification: [
-      'NewCollectNotification',
-      'NewCommentNotification',
-      'NewFollowerNotification',
-      'NewMentionNotification',
-      'NewMirrorNotification'
-    ],
-    ProfileMedia: ['MediaSet', 'NftImage'],
-    Publication: ['Comment', 'Mirror', 'Post'],
-    PublicationForSale: ['Comment', 'Post'],
-    PublicationSearchResultItem: ['Comment', 'Post'],
-    ReferenceModule: ['FollowOnlyReferenceModuleSettings'],
-    RelayResult: ['RelayError', 'RelayerResult'],
-    SearchResult: ['ProfileSearchResult', 'PublicationSearchResult'],
-    TransactionResult: ['TransactionError', 'TransactionIndexedResult']
-  }
-};
 
 export const COOKIE_CONFIG: CookieAttributes = {
   sameSite: 'None',
   secure: true,
-  expires: 360
+  expires: 300
 };
 
 const REFRESH_AUTHENTICATION_MUTATION = `
@@ -121,5 +84,3 @@ export const nodeClient = new ApolloClient({
   link: httpLink,
   cache
 });
-
-// export client;

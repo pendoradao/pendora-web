@@ -19,6 +19,7 @@ interface Props {
 }
 
 const Pending = ({ handle, txHash }: Props) => {
+  // TODO: pollInterval not working?
   const { data, loading } = useQuery(TX_STATUS_QUERY, {
     variables: {
       request: { txHash }

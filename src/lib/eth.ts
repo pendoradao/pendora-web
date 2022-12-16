@@ -1,4 +1,4 @@
-import { ethers, getDefaultProvider } from "ethers";
+import { ethers, getDefaultProvider, utils } from "ethers";
 import {
   configureChains,
   // chain,
@@ -31,13 +31,17 @@ const connectors = () => {
   ];
 };
 
-const client = createClient({
+export const splitSignature = (signature: string) => {
+  return utils.splitSignature(signature);
+};
+
+export const client = createClient({
   autoConnect: true,
   connectors,
   provider,
   webSocketProvider,
 })
 
-export {
-  client,
-}
+// export {
+//   client,
+// }

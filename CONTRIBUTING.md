@@ -19,6 +19,5 @@ The title of the pull request should be prefixed by the component or area that t
 - fix: bug fix
 - refactor: for structural changes that do not change behavior
 - perf: code change that improves performance
-- test: adding tests
 - chore: maintain
 - docs: update docs

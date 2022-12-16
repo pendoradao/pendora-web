@@ -20,7 +20,6 @@ export const getAvatarUrl = (profile: Profile) => {
   )
 }
 
-
 export const getProfile = async (profileId: string) => {
   const { data } = await client.query({
     query: ProfileDocument,
