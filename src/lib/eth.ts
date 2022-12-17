@@ -1,4 +1,4 @@
-import { ethers, getDefaultProvider, utils } from "ethers";
+import { getDefaultProvider, utils, BigNumber } from "ethers";
 import {
   configureChains,
   // chain,
@@ -35,13 +35,25 @@ export const splitSignature = (signature: string) => {
   return utils.splitSignature(signature);
 };
 
+export const getTypedData = (typedData: any) => {
+  delete typedData.__typename;
+  delete typedData.domain.__typename;
+  delete typedData.types.__typename;
+  for (let k in typedData.types) {
+    delete typedData.types[k].__typename;
+    for (let j of typedData.types[k]) {
+      delete j.__typename;
+      if ((j.type) === 'uint256') {
+        typedData.value[j.name] = BigNumber.from(typedData.value[j.name]);
+    }
+  }
+  delete typedData.value.__typename;
+  }
+}
+
 export const client = createClient({
   autoConnect: true,
   connectors,
   provider,
   webSocketProvider,
 })
-
-// export {
-//   client,
-// }

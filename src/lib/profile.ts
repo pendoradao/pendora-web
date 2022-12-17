@@ -42,8 +42,6 @@ export const getProfilesByOwnedBy = async (ownedBy: `0x${string}` | undefined) =
   return data.profiles
 }
 
-// export const useCreateBurnProfileTypedDataMutation
-
 export const createBurnProfileTypedData = async (profileId: string) => {
   const { data } = await client.mutate({
     mutation: gql`
