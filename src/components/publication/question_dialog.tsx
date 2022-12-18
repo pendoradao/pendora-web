@@ -3,13 +3,14 @@ import { object, string } from 'zod';
 import { useSignTypedData } from 'wagmi';
 import { splitSignature } from 'ethers/lib/utils';
 
+import { getTypedData } from '@lib/eth';
+import { upoadToIPFS } from '@lib/ipfs';
 import { 
   useCreatePostTypedDataMutation 
 } from '@generated/types';
 import { Button, Modal, Textarea, Input, Form, useZodForm } from '@components/ui';
 import { useAppPersistStore } from '@store/app';
 import { ContractContext } from '@context/contract';
-import { getTypedData } from '@lib/eth';
 
 interface QuestionFormProps {
   title: string;
@@ -45,6 +46,7 @@ const QuestionDialog = ({open, setOpen}: DialogProps) => {
     var { typedData } = data.createPostTypedData;
     getTypedData(typedData);
     console.log('create post: typedData', typedData);
+    // debugger
     await signTypedData({
       domain: typedData.domain,
       types: typedData.types,
@@ -80,6 +82,34 @@ const QuestionDialog = ({open, setOpen}: DialogProps) => {
           deadline: typedData.value.deadline,
         },
       });
+      console.log('create post: tx', tx);
+      setOpen(false)
+    }
+  }
+
+  const getIPFSResult = async (content: object) => {
+    const ipfsLink = await upoadToIPFS(content);
+    return `ipfs://${ipfsLink.path}`;
+  }
+
+  const getMetadata = (value: QuestionFormProps) => {
+    return {
+      version: '2.0.0',
+      mainContentFocus: "TEXT_ONLY",
+      metadata_id: Math.random().toString(),
+      description: value.content,
+      locale: 'en-US',
+      content: value.title,
+      external_url: null,
+      image: null,
+      imageMimeType: null,
+      name: 'Name',
+      attributes: [{
+        trait_type: 'type',
+        value: 'question',
+      }],
+      tags: [],
+      appId: 'Pendora',
     }
   }
 
@@ -101,9 +131,9 @@ const QuestionDialog = ({open, setOpen}: DialogProps) => {
     }
   }, [signature, data])
 
-  const onSubmit = (value: QuestionFormProps) => {
-    console.log(value)
-    const contentURI = 'ipfs://Qmby8QocUU2sPZL46rZeMctAuF5nrCc7eR1PPkooCztWPz'
+  const onSubmit = async (value: QuestionFormProps) => {
+    // console.log(value)
+    const contentURI = await getIPFSResult((getMetadata(value)));
     const createPostRequest = {
       profileId: currentUser?.id,
       contentURI: contentURI,
