@@ -5,7 +5,6 @@ export const APP_NAME = "Pendora";
 
 // Environments
 export const IS_PRODUCTION = process.env.NODE_ENV === 'production';
-// export const IS_DEVELOPMENT = process.env.NODE_ENV === 'development';
 export const IS_MAINNET = process.env.NEXT_PUBLIC_IS_MAINNET === 'true';
 
 // API endpoints
@@ -23,6 +22,11 @@ export const POLYGON_MUMBAI = {
   rpcUrls: { default: 'https://rpc-mumbai.maticvigil.com' }
 };
 export const CHAIN_ID = IS_MAINNET ? POLYGON_MAINNET.id : POLYGON_MUMBAI.id;
+
+// IPFS
+export const IPFS_GATEWAY = 'https://ipfs.infura.io:5001';
+export const IPFS_PROJECT_ID =  process.env.INFURA_IPFS_PROJECT_ID;
+export const IPFS_SECRET = process.env.INFURA_IPFS_SECRET;
 
 // Addresses
 export const LENSHUB_PROXY = IS_MAINNET

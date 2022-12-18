@@ -1,14 +1,11 @@
 import { gql } from '@apollo/client'
 
 import { client } from './request'
+import { PublicationsQueryRequest } from '@generated/types'
 
-export const GET_PUBLICATIONS = gql`
-  query Publications($id: ProfileId!, $limit: LimitScalar) {
-    publications(request: {
-      profileId: $id,
-      publicationTypes: [POST],
-      limit: $limit
-    }) {
+export const PublicationsDocument = gql`
+  query Publications($request: PublicationsQueryRequest!) {
+    publications(request: $request) {
       items {
         __typename 
         ... on Post {
@@ -28,13 +25,12 @@ export const GET_PUBLICATIONS = gql`
   }
 `
 
-export const getPublications = async (id: string, limit: number) => {
-  const { data } = await client.query({
-    query: GET_PUBLICATIONS,
+export const getPublications = async (request: PublicationsQueryRequest) => {
+  const result = await client.query({
+    query: PublicationsDocument,
     variables: {
-      id,
-      limit
-    }
-  })
-  return data.publications
+      request,
+    },
+  });
+  return result.data.publications;
 }

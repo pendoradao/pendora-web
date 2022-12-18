@@ -21,6 +21,4 @@ Run the development server:
 npm run dev
 ```
 
-Visit localhost:3999.
-
-visit [http://localhost:3999](http://localhost:3999).
+Visit [http://localhost:3999](http://localhost:3999).

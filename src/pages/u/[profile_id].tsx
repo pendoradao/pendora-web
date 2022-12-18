@@ -11,13 +11,12 @@ import { LOCAL_STORAGE_KEY } from '@constants';
 import { useAppPersistStore } from '@store/app';
 import { ContractContext } from '@context/contract';
 import { getProfile, getAvatarUrl } from '@lib/profile';
-import { getPublications } from '@lib/publication';
 import { GridLayout } from '@components/ui';
-import { Publication } from '@types';
 import { Profile } from '@generated/types';
 import { Button } from '@components/ui';
 import { useCreateBurnProfileTypedDataMutation } from '@generated/types';
 import type { CreateBurnProfileTypedDataMutation } from '@generated/types';
+import UserPublication from '@components/profile/user_publications';
 
 const ProfileArea = (profile: Profile) => {
   const currentUser = useAppPersistStore(state => state.currentUser)
@@ -125,27 +124,12 @@ const ProfileArea = (profile: Profile) => {
   )
 }
 
-const PublicationArea = ({ publications }: { publications: Publication[] }) => {
-  return (
-    <div>
-      {
-        publications.map(pub => (
-          <div key={pub.id} className='shadow p-10 rounded mb-8'>
-            <p>{pub.metadata.content}</p>
-          </div>
-        ))
-      }
-    </div>
-  )
-}
-
 const UserPage: NextPage = () => {
   const currentUser = useAppPersistStore(state => state.currentUser)
   const router = useRouter();
   const { profile_id } = router.query
   const profileId = profile_id as string
   const [profile, setProfile] = useState<Profile | null>(null)
-  const [publications, setPublications] = useState<Publication[]>([])
   const [isMe, setIsMe] = useState(false)
 
   useEffect(() => {
@@ -153,8 +137,6 @@ const UserPage: NextPage = () => {
       try {
         const profile = await getProfile(profileId)
         setProfile(profile)
-        const pubs = await getPublications(profile.id, 20)
-        setPublications(pubs.items)
       } catch (err) {
         console.log({ err })
       }
@@ -176,7 +158,7 @@ const UserPage: NextPage = () => {
         <ProfileArea {...profile} />
       </div>
       <div className='lg:col-span-6 lg:col-start-6 md:col-span-12 col-span-12 mb-5'>
-        <PublicationArea publications={publications} />
+        <UserPublication profile={profile} />
       </div>
     </GridLayout>
   )
