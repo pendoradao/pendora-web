@@ -35,7 +35,7 @@ export const Button = forwardRef<HTMLButtonElement, Props>(function Button(
         outline && !light && `border border-${variant}-200 text-${variant}-500`,
         outline && !light && !disabled && `hover:bg-${variant}-100`,
         light && 'border-none !shadow-none text-primary-500 hover:text-primary-700',
-        (icon || loading) && 'flex items-center space-x-1.5 shrink-0',
+        (icon || loading) && 'flex items-center justify-center space-x-1.5 shrink-0',
         {
           'px-2 py-0.5': size === 'sm',
           'px-3 py-1': size === 'md',
