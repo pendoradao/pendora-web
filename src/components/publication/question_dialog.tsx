@@ -3,7 +3,7 @@ import { object, string } from 'zod';
 import { useSignTypedData } from 'wagmi';
 
 import { cleanTypedData } from '@lib/eth';
-import { getIPFSResult } from '@lib/ipfs';
+import { getUploadToIPFSLink } from '@lib/ipfs';
 import { 
   useCreatePostTypedDataMutation 
 } from '@generated/types';
@@ -77,9 +77,9 @@ const QuestionDialog = ({open, setOpen}: DialogProps) => {
         content: value.title,
         description: value.content || '',
         type: 'question',
-        author: currentUser,
+        name: `${currentUser.name}'s question`,
       });
-      const contentURI = await getIPFSResult(metaData);
+      const contentURI = await getUploadToIPFSLink(metaData);
       const createPostRequest = {
         profileId: currentUser?.id,
         contentURI: contentURI,

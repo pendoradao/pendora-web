@@ -51,8 +51,6 @@ export const cleanTypedData = (typedData: any) => {
   }
 }
 
-
-
 export const client = createClient({
   autoConnect: true,
   connectors,

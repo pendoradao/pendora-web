@@ -8,13 +8,13 @@ import { PublicationsQueryRequest, Profile } from '@generated/types'
 
 export interface MetadataProps {
   content: string;
-  description: string;
+  description?: string;
   type: "question" | "answer";
   tags?: string[];
-  author: Profile;
+  name?: string;
 }
 
-export const getMetadata = ({content, description, type, tags, author}: MetadataProps) => {
+export const getMetadata = ({content, description, type, tags, name}: MetadataProps) => {
   return {
     appId: 'Pendora',
     version: '2.0.0',
@@ -26,7 +26,7 @@ export const getMetadata = ({content, description, type, tags, author}: Metadata
     external_url: null,
     image: null,
     imageMimeType: null,
-    name: `${author.name}'s ${type}`,
+    name: name || 'Pendora',
     attributes: [{
       trait_type: 'type',
       value: type,
@@ -102,5 +102,4 @@ export const usePostWithSig = () => {
     postWithSig,
     txLoading,
   }
-    
 }
