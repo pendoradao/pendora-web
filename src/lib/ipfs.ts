@@ -23,3 +23,8 @@ const client = create({
 export const upoadToIPFS = async (data: any) => {
   return await client.add(JSON.stringify(data));
 };
+
+export const getIPFSResult = async (content: object) => {
+  const ipfsLink = await upoadToIPFS(content);
+  return `ipfs://${ipfsLink.path}`;
+}
