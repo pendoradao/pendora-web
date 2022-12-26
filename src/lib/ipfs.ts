@@ -1,7 +1,3 @@
-import { create } from 'ipfs-http-client';
-
-import { IPFS_PROJECT_ID, IPFS_SECRET } from '@constants';
-
 export const getIPFSLink = (hash: string): string => {
   const infuraIPFS = 'https://ipfs.infura.io/ipfs/';
 
@@ -11,15 +7,19 @@ export const getIPFSLink = (hash: string): string => {
     .replace('ipfs://', infuraIPFS);
 };
 
-const client = create({
-  host: 'ipfs.infura.io',
-  port: 5001,
-  protocol: 'https',
-  headers: {
-    authorization: `Basic ${Buffer.from(`${IPFS_PROJECT_ID}:${IPFS_SECRET}`, 'utf-8').toString('base64')}`,
+export const getUploadToIPFSLink = async (content: object) => {
+  const res = await fetch('/api/ipfs', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(content),
+  })
+  try {
+    const data = await res.json()
+    console.log('data', data)
+    return data.url
+  } catch(e) {
+    console.log(e)
   }
-});
-
-export const upoadToIPFS = async (data: any) => {
-  return await client.add(JSON.stringify(data));
-};
+}

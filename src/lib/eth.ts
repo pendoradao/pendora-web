@@ -35,7 +35,7 @@ export const splitSignature = (signature: string) => {
   return utils.splitSignature(signature);
 };
 
-export const getTypedData = (typedData: any) => {
+export const cleanTypedData = (typedData: any) => {
   delete typedData.__typename;
   delete typedData.domain.__typename;
   delete typedData.types.__typename;
