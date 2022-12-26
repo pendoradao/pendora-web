@@ -10,6 +10,7 @@ import { Button } from '@components/ui';
 import LoginButton from './user_button';
 import { GlobalModalsContext } from '@context/modals';
 import { useAppPersistStore } from '@store/app';
+import { useLogin } from '@lib/login';
 
 const NavButton = ({ open }: { open: boolean }) => {
   return (
@@ -54,13 +55,15 @@ const NavItems = () => {
 const Navbar = () => {
   const { pathname, push } = useRouter();
   const modalContext = useContext(GlobalModalsContext);
+  const { startLogin } = useLogin();
   const currentUser = useAppPersistStore(state => state.currentUser);
 
   const handleOpenQuestionDialog = () => {
     if (currentUser) {
       modalContext?.questionDialog && modalContext.questionDialog.setOpen(true);
     } else {
-      modalContext.loginDialog.setOpen(true);
+      // modalContext.loginDialog.setOpen(true);
+      startLogin();
     }
   }
   return (
