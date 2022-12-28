@@ -6,7 +6,9 @@ import { HeartIcon, ChatAltIcon } from '@heroicons/react/outline';
 import { HeartIcon as HeartIconSolid } from '@heroicons/react/solid';
 
 import { Avatar, Tooltip } from '@components/ui';
-import { Question, Profile, Post } from '@types';
+// import { Question, Profile, Post } from '@types';
+import { Post } from '@generated/types';
+import { getIPFSLink } from '@lib/ipfs';
 import styles from '@/styles/publication.module.css';
 
 interface PostContext {
@@ -41,63 +43,66 @@ const Actions = () => {
 
 
 const SinglePublication: FC<Post & PostContext> = ({
-  questionId,
-  questionTitle,
-  answerId,
-  answerContent,
-  answerImage,
-  profileId,
-  userName,
-  userAvatar,
+  // questionId,
+  // questionTitle,
+  // answerId,
+  // answerContent,
+  // answerImage,
+  // profileId,
+  // userName,
+  // userAvatar,
+  id,
+  metadata,
+  profile,
   showQuestion,
   clickAble
 }) => {
   const { push } = useRouter();
   const handlerGoAnswer = () => {
-    clickAble && push(`/q/${questionId}/a/${answerId}`);
+    clickAble && push(`/q/${id}/a/${id}`);
   };
   const handlerGoQuestion = () => {
-    push(`/q/${questionId}`);
+    push(`/q/${id}`);
   };
   const handlerGoUser = () => {
-    push(`/u/${profileId}`);
+    push(`/u/${profile.id}`);
   };
 
   const [liked, setLiked] = useState(0);
 
   return (
     <div className={styles.single_publication}>
-      {showQuestion && questionId && (
+      {showQuestion && id && (
         <div className={styles.title} onClick={handlerGoAnswer} >
           <span>
-            {questionTitle}
+            {metadata.content}
           </span>
         </div>
       )}
       <div className={styles.header} onClick={handlerGoUser} >
-        <Avatar avatarUrl={userAvatar} className='mr-4'/>
+        <Avatar avatarUrl={getIPFSLink(profile.picture.original.url)} className='mr-4'/>
         <div className={styles.header__info}>
           <div className={styles.header__info__name}>
-            <span>{userName}</span>
+            <span>{profile.name || ''}</span>
           </div>
           <div className={styles.header__info__date}>
-            <span>@0xzelda.lens</span>
+            <span>@{profile.handle}</span>
           </div>
         </div>
       </div>
       <div className={clsx(styles.content, clickAble ? 'cursor-pointer': '')} onClick={handlerGoAnswer}>
         <div className={styles.content__text}>
           <span>
-            {answerContent}
+            {/* {answerContent} */}
           </span>
         </div>
-        {
+        {/* {
           answerImage && (
             <div className={styles.content__image} >
               <Image src={answerImage} alt="image" width={400} height={400} style={{ width: '100%', height: "auto" }} />
             </div>
           )
-        }
+        } */}
       </div>
       <Actions />
     </div>
