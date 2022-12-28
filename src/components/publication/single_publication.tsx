@@ -58,9 +58,9 @@ const SinglePublication: FC<Post & PostContext> = ({
   clickAble
 }) => {
   const { push } = useRouter();
-  const handlerGoAnswer = () => {
-    clickAble && push(`/q/${id}/a/${id}`);
-  };
+  // const handlerGoAnswer = () => {
+  //   clickAble && push(`/q/${id}/a/${id}`);
+  // };
   const handlerGoQuestion = () => {
     push(`/q/${id}`);
   };
@@ -73,24 +73,25 @@ const SinglePublication: FC<Post & PostContext> = ({
   return (
     <div className={styles.single_publication}>
       {showQuestion && id && (
-        <div className={styles.title} onClick={handlerGoAnswer} >
+        <div className={styles.title} onClick={handlerGoQuestion} >
           <span>
             {metadata.content}
           </span>
         </div>
       )}
+      
       <div className={styles.header} onClick={handlerGoUser} >
-        <Avatar avatarUrl={getIPFSLink(profile.picture.original.url)} className='mr-4'/>
+        <Avatar avatarUrl={getIPFSLink(profile?.picture?.original?.url || '')} className='mr-4'/>
         <div className={styles.header__info}>
           <div className={styles.header__info__name}>
-            <span>{profile.name || ''}</span>
+            <span>{profile.name || profile.handle}</span>
           </div>
           <div className={styles.header__info__date}>
             <span>@{profile.handle}</span>
           </div>
         </div>
       </div>
-      <div className={clsx(styles.content, clickAble ? 'cursor-pointer': '')} onClick={handlerGoAnswer}>
+      <div className={clsx(styles.content, clickAble ? 'cursor-pointer': '')} onClick={handlerGoQuestion}>
         <div className={styles.content__text}>
           <span>
             {/* {answerContent} */}

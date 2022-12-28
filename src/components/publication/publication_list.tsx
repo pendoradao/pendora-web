@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 
 import SinglePublication  from './single_publication';
-// import { Post } from '@types';
 import { Post, PublicationTypes, useExploreFeedQuery, PublicationSortCriteria } from '@generated/types';
 
 interface PublicationListProps {
@@ -24,8 +23,8 @@ export const PublicationList = (publicationListProps: PublicationListProps) => {
   });
 
   useEffect(() => {
-    if (feedData) {
-      console.log(feedData)
+    if (feedData?.explorePublications.items) {
+      // console.log(feedData)
       setData(feedData?.explorePublications?.items)
     }
   }, [feedData])

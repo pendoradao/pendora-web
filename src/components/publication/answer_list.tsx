@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { PencilIcon } from '@heroicons/react/solid';
 
-import { Question, Post } from '@types';
+import { Post, usePublicationQuery } from '@generated/types';
 import { Button } from '@components/ui';
 import AnswerDialog from '@components/publication/answer_dialog';
 import { useAppPersistStore } from '@store/app';
@@ -10,8 +10,8 @@ import QuestionCard from './question_card';
 import { useLogin } from '@lib/login';
 
 interface AnswerListProps {
-  questionId: number;
-  answerId?: number;
+  questionId: string;
+  answerId?: string;
 }
 
 export const AnswerList = (answerListProps: AnswerListProps) => {
@@ -19,21 +19,28 @@ export const AnswerList = (answerListProps: AnswerListProps) => {
   const { startLogin } = useLogin();
   const { questionId, answerId } = answerListProps;
   const [data, setData] = useState([])
-  const [question, setQuestion] = useState({} as Question)
+  const [question, setQuestion] = useState({} as Post)
   const [isLoading, setLoading] = useState(false)
   const [open, setOpen] = useState(false)
-  
+
+  const { data: publiction, loading, error } = usePublicationQuery({
+    variables: {
+      //  request: // value for 'request'
+      //  reactionRequest: // value for 'reactionRequest'
+      //  profileId: // value for 'profileId'
+      request: {
+        publicationId: questionId,
+      }
+    },
+  });
+
   useEffect(() => {
-    const url = answerId ? `/api/a?questionId=${questionId}&answerId=${answerId}` : `/api/a?questionId=${questionId}`
-    setLoading(true)
-    fetch(url)
-      .then((res) => res.json())
-      .then((data) => {
-        setData(data.data)
-        setQuestion(data.question)
-        setLoading(false)
-      })
-  }, [answerId, questionId])
+    if (publiction && publiction?.publication) {
+      console.log(publiction)
+      setQuestion(publiction?.publication)
+    }
+  }, [publiction])
+
 
   const handleAnswer = () => {
     if (currentUser) {
@@ -60,7 +67,7 @@ export const AnswerList = (answerListProps: AnswerListProps) => {
         }
       </div>
       {
-        data ? data?.map((post: Post) => <SinglePublication key={post.answerId} {...post} showQuestion={false} clickAble={false} />) : null
+        data ? data?.map((post: Post) => <SinglePublication key={post.id} {...post} showQuestion={false} clickAble={false} />) : null
       }
     </div>
   );

@@ -3,8 +3,7 @@ import { object, string } from 'zod';
 import { useSignTypedData } from 'wagmi';
 
 import { Button, Modal, Textarea, Form, useZodForm } from '@components/ui';
-import { Question } from '@types';
-import { useCreatePostTypedDataMutation } from '@generated/types';
+import { Post,  useCreatePostTypedDataMutation } from '@generated/types';
 import { cleanTypedData } from '@lib/eth';
 import { getUploadToIPFSLink } from '@lib/ipfs';
 import { useAppPersistStore } from '@store/app';
@@ -22,7 +21,7 @@ const answerSchema = object({
 interface AnswerDialogProps {
   open: boolean;
   setOpen: (isOpen: boolean) => void;
-  question: Question;
+  question: Post;
 }
 
 function AnswerDialog(answerDialogProps: AnswerDialogProps) {
@@ -98,7 +97,7 @@ function AnswerDialog(answerDialogProps: AnswerDialogProps) {
   }
 
   return (
-    <Modal open={open} setOpen={setOpen} title={question.title} content={question.content} className="w-full lg:w-2/5">
+    <Modal open={open} setOpen={setOpen} title={question.metadata.content} content={question.metadata.description} className="w-full lg:w-2/5">
       <Form form={form} onSubmit={onSubmit}>
         <div className='mt-4'>
           <Textarea rows={25} placeholder={'My opinion is ...'}  {...form.register('content')}/>

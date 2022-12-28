@@ -1,15 +1,15 @@
-import { Question, Post } from '@types';
+import { Post } from '@generated/types';
 
-const QuestionCard = (questionCardProps: Question) => {
-  const { id, title, content } = questionCardProps;
+const QuestionCard = (question: Post) => {
+  const { metadata } = question;
 
   return (
     <div className='mb-8'>
       <div className='text-2xl font-semibold'>
-        <h1>{title}</h1>
+        <h1>{metadata.content}</h1>
       </div>
       <div className='mt-4'>
-        <span>{content}</span>
+        <span>{metadata.description}</span>
       </div>
     </div>
   );
