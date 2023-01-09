@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react'
 import { PencilIcon } from '@heroicons/react/solid';
 
-import { Post, usePublicationQuery } from '@generated/types';
+import { Post, Comment, usePublicationQuery, useCommentFeedQuery } from '@generated/types';
 import { Button } from '@components/ui';
 import AnswerDialog from '@components/publication/answer_dialog';
 import { useAppPersistStore } from '@store/app';
-import SinglePublication from './single_publication';
+import { SinglePublication, SingleAnswer} from './single_publication';
 import QuestionCard from './question_card';
 import { useLogin } from '@lib/login';
 
@@ -18,18 +18,23 @@ export const AnswerList = (answerListProps: AnswerListProps) => {
   const currentUser = useAppPersistStore(state => state.currentUser);
   const { startLogin } = useLogin();
   const { questionId, answerId } = answerListProps;
-  const [data, setData] = useState([])
+  const [data, setData] = useState([] as Comment[])
   const [question, setQuestion] = useState({} as Post)
   const [isLoading, setLoading] = useState(false)
   const [open, setOpen] = useState(false)
 
   const { data: publiction, loading, error } = usePublicationQuery({
     variables: {
-      //  request: // value for 'request'
-      //  reactionRequest: // value for 'reactionRequest'
-      //  profileId: // value for 'profileId'
       request: {
         publicationId: questionId,
+      }
+    },
+  });
+
+  const { data: answerData, loading: answerLoading, error: answerError } = useCommentFeedQuery({
+    variables: {
+      request: {
+        commentsOf: questionId,
       }
     },
   });
@@ -40,6 +45,13 @@ export const AnswerList = (answerListProps: AnswerListProps) => {
       setQuestion(publiction?.publication)
     }
   }, [publiction])
+
+  useEffect(() => {
+    if (answerData && answerData?.publications) {
+      console.log(answerData)
+      setData(answerData?.publications?.items)
+    }
+  }, [answerData])
 
 
   const handleAnswer = () => {
@@ -67,7 +79,8 @@ export const AnswerList = (answerListProps: AnswerListProps) => {
         }
       </div>
       {
-        data ? data?.map((post: Post) => <SinglePublication key={post.id} {...post} showQuestion={false} clickAble={false} />) : null
+        // data ? data?.map((comment: Comment) => <SingleAnswer key={comment.id} {...comment} clickAble={false} />) : null
+        data ? data?.map((comment: Comment) => <SinglePublication key={comment.id} comment={comment} clickAble={false} />) : null
       }
     </div>
   );

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 
-import SinglePublication  from './single_publication';
+import { SinglePublication }  from './single_publication';
 import { Post, PublicationTypes, useExploreFeedQuery, PublicationSortCriteria } from '@generated/types';
 
 interface PublicationListProps {
@@ -33,7 +33,7 @@ export const PublicationList = (publicationListProps: PublicationListProps) => {
     <div>
       {isLoading && <p>Loading...</p>}
       {
-        data ? data?.map((post: Post) => <SinglePublication key={post.id} {...post} showQuestion={true} clickAble={true}/>) : null
+        data ? data?.map((post: Post) => <SinglePublication key={post.id} question={post} showQuestion={true} clickAble={true}/>) : null
       }
     </div>
   );
