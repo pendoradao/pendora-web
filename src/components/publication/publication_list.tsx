@@ -25,6 +25,7 @@ export const PublicationList = (publicationListProps: PublicationListProps) => {
   useEffect(() => {
     if (feedData?.explorePublications.items) {
       // console.log(feedData)
+      // @ts-ignore
       setData(feedData?.explorePublications?.items)
     }
   }, [feedData])

@@ -45,10 +45,12 @@ const ProfileArea: FC<Profile> = ({id, handle, picture, name}) => {
   const handlerGoUser = () => {
     push(`/u/${id}`);
   };
+  // @ts-ignore
+  const avatarUrl= getIPFSLink(picture?.original?.url || '');
 
   return (
     <div className={styles.header} onClick={handlerGoUser} >
-      <Avatar avatarUrl={getIPFSLink(picture?.original?.url || '')} className='mr-4'/>
+      <Avatar avatarUrl={avatarUrl} className='mr-4'/>
       <div className={styles.header__info}>
         <div className={styles.header__info__name}>
           <span>{name || handle}</span>
@@ -84,6 +86,7 @@ export const SingleAnswer: FC<Comment & PublicationContext> = ({
           )
         } */}
       </div>
+      <Actions />
     </>
   )
 }
@@ -96,9 +99,6 @@ export const SinglePublication: FC<{question?: Post} & PublicationContext & {com
   clickAble
 }) => {
   const { push } = useRouter();
-  // const handlerGoAnswer = () => {
-  //   clickAble && push(`/q/${id}/a/${id}`);
-  // };
   const handlerGoQuestion = () => {
     push(`/q/${question?.id}`);
   };
@@ -120,7 +120,7 @@ export const SinglePublication: FC<{question?: Post} & PublicationContext & {com
         )
       }
 
-      <Actions />
+
     </div>
   );
 };

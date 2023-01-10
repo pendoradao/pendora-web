@@ -3,11 +3,11 @@ import { object, string } from 'zod';
 import { useSignTypedData } from 'wagmi';
 
 import { Button, Modal, Textarea, Form, useZodForm } from '@components/ui';
-import { Post,  useCreatePostTypedDataMutation, useCreateCommentTypedDataMutation, CreatePublicCommentRequest } from '@generated/types';
+import { Post, useCreateCommentTypedDataMutation, CreatePublicCommentRequest } from '@generated/types';
 import { cleanTypedData } from '@lib/eth';
 import { getUploadToIPFSLink } from '@lib/ipfs';
 import { useAppPersistStore } from '@store/app';
-import { getMetadata, usePostWithSig, useCommentWithSig } from '@lib/publication';
+import { getMetadata, useCommentWithSig } from '@lib/publication';
 
 interface AnswerFormProps {
   content: string;
@@ -22,6 +22,7 @@ interface AnswerDialogProps {
   open: boolean;
   setOpen: (isOpen: boolean) => void;
   question: Post;
+  handlerRefresh: () => void;
 }
 
 function AnswerDialog(answerDialogProps: AnswerDialogProps) {

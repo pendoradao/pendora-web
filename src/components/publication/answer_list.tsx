@@ -5,7 +5,7 @@ import { Post, Comment, usePublicationQuery, useCommentFeedQuery } from '@genera
 import { Button } from '@components/ui';
 import AnswerDialog from '@components/publication/answer_dialog';
 import { useAppPersistStore } from '@store/app';
-import { SinglePublication, SingleAnswer} from './single_publication';
+import { SinglePublication } from './single_publication';
 import QuestionCard from './question_card';
 import { useLogin } from '@lib/login';
 
@@ -19,7 +19,7 @@ export const AnswerList = (answerListProps: AnswerListProps) => {
   const { startLogin } = useLogin();
   const { questionId, answerId } = answerListProps;
   const [data, setData] = useState([] as Comment[])
-  const [question, setQuestion] = useState({} as Post)
+  const [question, setQuestion] = useState({id: questionId} as Post)
   const [isLoading, setLoading] = useState(false)
   const [open, setOpen] = useState(false)
 
@@ -42,13 +42,17 @@ export const AnswerList = (answerListProps: AnswerListProps) => {
   useEffect(() => {
     if (publiction && publiction?.publication) {
       console.log(publiction)
-      setQuestion(publiction?.publication)
+      if (publiction?.publication.__typename === 'Post') {
+        // @ts-ignore
+        setQuestion(publiction?.publication)
+      }
     }
   }, [publiction])
 
   useEffect(() => {
     if (answerData && answerData?.publications) {
       console.log(answerData)
+      // @ts-ignore
       setData(answerData?.publications?.items)
     }
   }, [answerData])
@@ -62,6 +66,10 @@ export const AnswerList = (answerListProps: AnswerListProps) => {
     }
   }
 
+  const handlerRefresh = () => {
+    console.log('refresh')
+  }
+
   return (
     <div>
       {isLoading && <p>Loading...</p>}
@@ -72,7 +80,7 @@ export const AnswerList = (answerListProps: AnswerListProps) => {
               <QuestionCard {...question} />
               <div className='flex'>
                 <Button icon={<PencilIcon/>} variant="primary" onClick={handleAnswer}> Answer</Button>
-                <AnswerDialog open={open} setOpen={setOpen} question={question}/>
+                <AnswerDialog open={open} setOpen={setOpen} question={question} handlerRefresh={handlerRefresh}/>
               </div>
             </>
           ) : <></>
@@ -80,7 +88,9 @@ export const AnswerList = (answerListProps: AnswerListProps) => {
       </div>
       {
         // data ? data?.map((comment: Comment) => <SingleAnswer key={comment.id} {...comment} clickAble={false} />) : null
-        data ? data?.map((comment: Comment) => <SinglePublication key={comment.id} comment={comment} clickAble={false} />) : null
+        data ? 
+          data?.map((comment: Comment) => <SinglePublication key={comment.id} comment={comment} clickAble={false}/>) : 
+          null
       }
     </div>
   );

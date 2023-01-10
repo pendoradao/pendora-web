@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getPublications } from '@lib/publication';
-import { Profile, Post } from '@generated/types';
+import { Profile, Post, PublicationTypes } from '@generated/types';
 
 interface UserPublicationProps {
   profile: Profile;
@@ -12,8 +12,10 @@ const UserPublication = ({profile}: UserPublicationProps) => {
     if (profile.id) {
       getPublications({
         profileId: profile.id,
-        limit: 10
+        limit: 10,
+        publicationTypes: [PublicationTypes.Post]
       }).then((data) => {
+        console.log(data.items);
         setPublications(data.items);
       });
     }
