@@ -3,12 +3,11 @@ import { object, string } from 'zod';
 import { useSignTypedData } from 'wagmi';
 
 import { Button, Modal, Textarea, Form, useZodForm } from '@components/ui';
-import { Question } from '@types';
-import { useCreatePostTypedDataMutation } from '@generated/types';
+import { Post, useCreateCommentTypedDataMutation, CreatePublicCommentRequest } from '@generated/types';
 import { cleanTypedData } from '@lib/eth';
 import { getUploadToIPFSLink } from '@lib/ipfs';
 import { useAppPersistStore } from '@store/app';
-import { getMetadata, usePostWithSig } from '@lib/publication';
+import { getMetadata, useCommentWithSig } from '@lib/publication';
 
 interface AnswerFormProps {
   content: string;
@@ -22,12 +21,13 @@ const answerSchema = object({
 interface AnswerDialogProps {
   open: boolean;
   setOpen: (isOpen: boolean) => void;
-  question: Question;
+  question: Post;
+  handlerRefresh: () => void;
 }
 
 function AnswerDialog(answerDialogProps: AnswerDialogProps) {
   const currentUser = useAppPersistStore(state => state.currentUser);
-  const [createPostTypedDataMutation,  { data, loading, error }] = useCreatePostTypedDataMutation({
+  const [createCommentTypedDataMutation,  { data, loading, error }] = useCreateCommentTypedDataMutation({
     onError: (error) => {
       console.error(error);
     }
@@ -37,14 +37,14 @@ function AnswerDialog(answerDialogProps: AnswerDialogProps) {
       console.error(error?.message);
     },
   })
-  const { postWithSig } = usePostWithSig();
+  const { commentWithSig } = useCommentWithSig();
   const form = useZodForm({
     schema: answerSchema
   });
-  const { open, setOpen, question } = answerDialogProps
+  const { open, setOpen, question, handlerRefresh } = answerDialogProps
 
   const handleSignTypedData = async (data: any) => {
-    var { typedData } = data.createPostTypedData;
+    var { typedData } = data.createCommentTypedData;
     cleanTypedData(typedData);
     console.log('create post: typedData', typedData);
     await signTypedData({
@@ -64,8 +64,9 @@ function AnswerDialog(answerDialogProps: AnswerDialogProps) {
 
   useEffect(() => {
     if (signature && data) {
-      postWithSig(signature, data)
+      commentWithSig(signature, data)
       setOpen(false)
+      handlerRefresh()
     }
   }, [signature, data])
 
@@ -74,11 +75,12 @@ function AnswerDialog(answerDialogProps: AnswerDialogProps) {
       const metaData = getMetadata({
         content: value.content,
         type: 'answer',
-        name: `${currentUser.name}'s question`,
+        name: `${currentUser.name}'s answer`,
       });
       const contentURI = await getUploadToIPFSLink(metaData);
       if (contentURI) {
-        const createPostRequest = {
+        const CreatePublicCommentRequest = {
+          publicationId: question.id,
           profileId: currentUser?.id,
           contentURI: contentURI,
           collectModule: {
@@ -88,7 +90,7 @@ function AnswerDialog(answerDialogProps: AnswerDialogProps) {
             followerOnlyReferenceModule: false,
           },
         };
-        createPostTypedDataMutation({variables: {request: createPostRequest}});
+        await createCommentTypedDataMutation({variables: {request: CreatePublicCommentRequest}});
       } else {
         console.error('Upload to IPFS failed')
       }
@@ -98,7 +100,7 @@ function AnswerDialog(answerDialogProps: AnswerDialogProps) {
   }
 
   return (
-    <Modal open={open} setOpen={setOpen} title={question.title} content={question.content} className="w-full lg:w-2/5">
+    <Modal open={open} setOpen={setOpen} title={question.metadata.content} content={question.metadata.description} className="w-full lg:w-2/5">
       <Form form={form} onSubmit={onSubmit}>
         <div className='mt-4'>
           <Textarea rows={25} placeholder={'My opinion is ...'}  {...form.register('content')}/>

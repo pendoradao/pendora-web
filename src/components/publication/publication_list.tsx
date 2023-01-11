@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 
-import SinglePublication  from './single_publication';
-import { Post } from '@types';
+import { Spinner } from '@components/ui';
+import { SinglePublication }  from './single_publication';
+import { Post, PublicationTypes, useExploreFeedQuery, PublicationSortCriteria } from '@generated/types';
 
 interface PublicationListProps {
   type: string;
@@ -10,23 +11,30 @@ interface PublicationListProps {
 export const PublicationList = (publicationListProps: PublicationListProps) => {
   const {type } = publicationListProps;
   const [data, setData] = useState([])
-  const [isLoading, setLoading] = useState(false)
+
+  const { data: feedData, loading, error } = useExploreFeedQuery({
+    variables: {
+      request: {
+        publicationTypes: [PublicationTypes.Post],
+        sortCriteria: PublicationSortCriteria.Latest,
+        limit: 10
+      }
+    },
+  });
 
   useEffect(() => {
-    setLoading(true)
-    fetch('/api/feed?type=' + type)
-      .then((res) => res.json())
-      .then((data) => {
-        setData(data.data)
-        setLoading(false)
-      })
-  }, [type])
+    if (feedData?.explorePublications.items) {
+      // console.log(feedData)
+      // @ts-ignore
+      setData(feedData?.explorePublications?.items)
+    }
+  }, [feedData])
 
   return (
     <div>
-      {isLoading && <p>Loading...</p>}
+      {loading && <Spinner size='lg' className='mx-auto'/>}
       {
-        data ? data?.map((post: Post) => <SinglePublication key={post.answerId} {...post} showQuestion={true} clickAble={true}/>) : null
+        data ? data?.map((post: Post) => <SinglePublication key={post.id} question={post} showQuestion={true} clickAble={true}/>) : null
       }
     </div>
   );

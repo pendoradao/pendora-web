@@ -14,7 +14,23 @@ const nextConfig = {
       },
       {
         protocol: 'https',
+        hostname: 'pendora.infura-ipfs.io'
+      },
+      {
+        protocol: 'https',
         hostname: 'avatar.tobi.sh'
+      },
+      {
+        protocol: 'https',
+        hostname: 'cdn.stamp.fyi'
+      },
+      {
+        protocol: 'https',
+        hostname: 'test.com'
+      },
+      {
+        protocol: 'https',
+        hostname: 'pbs.twimg.com'
       }
     ],
   },

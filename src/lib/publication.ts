@@ -103,3 +103,46 @@ export const usePostWithSig = () => {
     txLoading,
   }
 }
+
+export const useCommentWithSig = () => {
+  const { lensHub } = useContext(ContractContext)
+  const [txLoading, setTxLoading] = useState(false)
+
+  const commentWithSig = async (signature: string, data: any) => {
+    if (lensHub) {
+      console.log('create comment: signature', signature);
+      setTxLoading(true)
+      var { typedData } = data.createCommentTypedData
+      const { v, r, s } = splitSignature(signature);
+      const tx = await lensHub.commentWithSig(
+        {
+          profileId: typedData.value.profileId,
+          contentURI: typedData.value.contentURI,
+          profileIdPointed: typedData.value.profileIdPointed,
+          pubIdPointed: typedData.value.pubIdPointed,
+          collectModule: typedData.value.collectModule,
+          collectModuleInitData: typedData.value.collectModuleInitData,
+          referenceModule: typedData.value.referenceModule,
+          referenceModuleInitData: typedData.value.referenceModuleInitData,
+          referenceModuleData: typedData.value.referenceModuleData,
+          sig: {
+            v,
+            r,
+            s,
+            deadline: typedData.value.deadline,
+          },
+        },
+        { gasLimit: 500000 }
+      );
+      console.log('create comment:', tx);
+      setTxLoading(false)
+    } else {
+      console.error('LensHub contract not found');
+    }
+  }
+
+  return {
+    commentWithSig,
+    txLoading,
+  }
+}

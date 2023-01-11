@@ -1,8 +1,8 @@
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import { useState, useEffect } from 'react';
 
 import { GridLayout, GridItemMain } from '@components/ui';
+import { AnswerList } from '@components/publication/answer_list';
 
 const QuestionPage: NextPage = () => {
   const router = useRouter();
@@ -12,7 +12,7 @@ const QuestionPage: NextPage = () => {
   return (
     <GridLayout>
       <GridItemMain>
-        question: {questionId}
+        <AnswerList questionId={questionId} />
       </GridItemMain>
     </GridLayout>
   )

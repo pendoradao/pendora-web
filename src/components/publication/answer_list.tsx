@@ -1,39 +1,59 @@
 import { useState, useEffect } from 'react'
 import { PencilIcon } from '@heroicons/react/solid';
 
-import { Question, Post } from '@types';
-import { Button } from '@components/ui';
+import { Post, Comment, usePublicationQuery, useCommentFeedQuery } from '@generated/types';
+import { Button, Spinner } from '@components/ui';
 import AnswerDialog from '@components/publication/answer_dialog';
 import { useAppPersistStore } from '@store/app';
-import SinglePublication from './single_publication';
+import { SinglePublication } from './single_publication';
 import QuestionCard from './question_card';
 import { useLogin } from '@lib/login';
 
 interface AnswerListProps {
-  questionId: number;
-  answerId?: number;
+  questionId: string;
+  answerId?: string;
 }
 
 export const AnswerList = (answerListProps: AnswerListProps) => {
   const currentUser = useAppPersistStore(state => state.currentUser);
   const { startLogin } = useLogin();
   const { questionId, answerId } = answerListProps;
-  const [data, setData] = useState([])
-  const [question, setQuestion] = useState({} as Question)
-  const [isLoading, setLoading] = useState(false)
+  const [data, setData] = useState([] as Comment[])
+  const [question, setQuestion] = useState({} as Post)
   const [open, setOpen] = useState(false)
-  
+
+  const { data: publiction, loading, error } = usePublicationQuery({
+    variables: {
+      request: {
+        publicationId: questionId,
+      }
+    },
+  });
+
+  const { data: answerData, loading: answerLoading, error: answerError } = useCommentFeedQuery({
+    variables: {
+      request: {
+        commentsOf: questionId,
+      }
+    },
+  });
+
   useEffect(() => {
-    const url = answerId ? `/api/a?questionId=${questionId}&answerId=${answerId}` : `/api/a?questionId=${questionId}`
-    setLoading(true)
-    fetch(url)
-      .then((res) => res.json())
-      .then((data) => {
-        setData(data.data)
-        setQuestion(data.question)
-        setLoading(false)
-      })
-  }, [answerId, questionId])
+    if (publiction && publiction?.publication) {
+      // console.log(publiction)
+      // @ts-ignore
+      setQuestion(publiction?.publication)
+    }
+  }, [publiction])
+
+  useEffect(() => {
+    if (answerData && answerData?.publications) {
+      // console.log(answerData)
+      // @ts-ignore
+      setData(answerData?.publications?.items)
+    }
+  }, [answerData])
+
 
   const handleAnswer = () => {
     if (currentUser) {
@@ -43,9 +63,12 @@ export const AnswerList = (answerListProps: AnswerListProps) => {
     }
   }
 
+  const handlerRefresh = () => {
+    console.log('refresh')
+  }
+
   return (
     <div>
-      {isLoading && <p>Loading...</p>}
       <div>
         {
           question?.id ? (
@@ -53,14 +76,17 @@ export const AnswerList = (answerListProps: AnswerListProps) => {
               <QuestionCard {...question} />
               <div className='flex'>
                 <Button icon={<PencilIcon/>} variant="primary" onClick={handleAnswer}> Answer</Button>
-                <AnswerDialog open={open} setOpen={setOpen} question={question}/>
+                <AnswerDialog open={open} setOpen={setOpen} question={question} handlerRefresh={handlerRefresh}/>
               </div>
             </>
           ) : <></>
         }
       </div>
+      {(loading || answerLoading) && <Spinner size='lg' className='mx-auto'/>}
       {
-        data ? data?.map((post: Post) => <SinglePublication key={post.answerId} {...post} showQuestion={false} clickAble={false} />) : null
+        data ? 
+          data?.map((comment: Comment) => <SinglePublication key={comment.id} comment={comment} clickAble={false}/>) : 
+          null
       }
     </div>
   );
