@@ -103,7 +103,7 @@ function AnswerDialog(answerDialogProps: AnswerDialogProps) {
     <Modal open={open} setOpen={setOpen} title={question.metadata.content} content={question.metadata.description} className="w-full lg:w-2/5">
       <Form form={form} onSubmit={onSubmit}>
         <div className='mt-4'>
-          <Textarea rows={25} placeholder={'My opinion is ...'}  {...form.register('content')}/>
+          <Textarea rows={16} placeholder={'My opinion is ...'}  {...form.register('content')}/>
         </div>
         <div className='flex gap-2 mt-4'>
           <div className='grow'></div>
