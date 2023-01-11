@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 
+import { Spinner } from '@components/ui';
 import { SinglePublication }  from './single_publication';
 import { Post, PublicationTypes, useExploreFeedQuery, PublicationSortCriteria } from '@generated/types';
 
@@ -10,7 +11,6 @@ interface PublicationListProps {
 export const PublicationList = (publicationListProps: PublicationListProps) => {
   const {type } = publicationListProps;
   const [data, setData] = useState([])
-  const [isLoading, setLoading] = useState(false)
 
   const { data: feedData, loading, error } = useExploreFeedQuery({
     variables: {
@@ -32,7 +32,7 @@ export const PublicationList = (publicationListProps: PublicationListProps) => {
 
   return (
     <div>
-      {isLoading && <p>Loading...</p>}
+      {loading && <Spinner size='lg' className='mx-auto'/>}
       {
         data ? data?.map((post: Post) => <SinglePublication key={post.id} question={post} showQuestion={true} clickAble={true}/>) : null
       }

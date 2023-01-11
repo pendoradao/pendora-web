@@ -18,7 +18,7 @@ const upoadToIPFS = async (data: any) => {
 
 const getUploadToIPFSLink = async (content: object) => {
   const ipfsResult = await upoadToIPFS(content);
-  console.log('ipfsResult', ipfsResult)
+  // console.log('ipfsResult', ipfsResult)
   return `ipfs://${ipfsResult.path}`;
 }
 

@@ -41,7 +41,7 @@ function AnswerDialog(answerDialogProps: AnswerDialogProps) {
   const form = useZodForm({
     schema: answerSchema
   });
-  const { open, setOpen, question } = answerDialogProps
+  const { open, setOpen, question, handlerRefresh } = answerDialogProps
 
   const handleSignTypedData = async (data: any) => {
     var { typedData } = data.createCommentTypedData;
@@ -66,6 +66,7 @@ function AnswerDialog(answerDialogProps: AnswerDialogProps) {
     if (signature && data) {
       commentWithSig(signature, data)
       setOpen(false)
+      handlerRefresh()
     }
   }, [signature, data])
 
@@ -74,7 +75,7 @@ function AnswerDialog(answerDialogProps: AnswerDialogProps) {
       const metaData = getMetadata({
         content: value.content,
         type: 'answer',
-        name: `${currentUser.name}'s question`,
+        name: `${currentUser.name}'s answer`,
       });
       const contentURI = await getUploadToIPFSLink(metaData);
       if (contentURI) {
@@ -89,7 +90,7 @@ function AnswerDialog(answerDialogProps: AnswerDialogProps) {
             followerOnlyReferenceModule: false,
           },
         };
-        createCommentTypedDataMutation({variables: {request: CreatePublicCommentRequest}});
+        await createCommentTypedDataMutation({variables: {request: CreatePublicCommentRequest}});
       } else {
         console.error('Upload to IPFS failed')
       }

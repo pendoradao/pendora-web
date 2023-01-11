@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { PencilIcon } from '@heroicons/react/solid';
 
 import { Post, Comment, usePublicationQuery, useCommentFeedQuery } from '@generated/types';
-import { Button } from '@components/ui';
+import { Button, Spinner } from '@components/ui';
 import AnswerDialog from '@components/publication/answer_dialog';
 import { useAppPersistStore } from '@store/app';
 import { SinglePublication } from './single_publication';
@@ -19,8 +19,7 @@ export const AnswerList = (answerListProps: AnswerListProps) => {
   const { startLogin } = useLogin();
   const { questionId, answerId } = answerListProps;
   const [data, setData] = useState([] as Comment[])
-  const [question, setQuestion] = useState({id: questionId} as Post)
-  const [isLoading, setLoading] = useState(false)
+  const [question, setQuestion] = useState({} as Post)
   const [open, setOpen] = useState(false)
 
   const { data: publiction, loading, error } = usePublicationQuery({
@@ -41,17 +40,15 @@ export const AnswerList = (answerListProps: AnswerListProps) => {
 
   useEffect(() => {
     if (publiction && publiction?.publication) {
-      console.log(publiction)
-      if (publiction?.publication.__typename === 'Post') {
-        // @ts-ignore
-        setQuestion(publiction?.publication)
-      }
+      // console.log(publiction)
+      // @ts-ignore
+      setQuestion(publiction?.publication)
     }
   }, [publiction])
 
   useEffect(() => {
     if (answerData && answerData?.publications) {
-      console.log(answerData)
+      // console.log(answerData)
       // @ts-ignore
       setData(answerData?.publications?.items)
     }
@@ -72,7 +69,6 @@ export const AnswerList = (answerListProps: AnswerListProps) => {
 
   return (
     <div>
-      {isLoading && <p>Loading...</p>}
       <div>
         {
           question?.id ? (
@@ -86,8 +82,8 @@ export const AnswerList = (answerListProps: AnswerListProps) => {
           ) : <></>
         }
       </div>
+      {(loading || answerLoading) && <Spinner size='lg' className='mx-auto'/>}
       {
-        // data ? data?.map((comment: Comment) => <SingleAnswer key={comment.id} {...comment} clickAble={false} />) : null
         data ? 
           data?.map((comment: Comment) => <SinglePublication key={comment.id} comment={comment} clickAble={false}/>) : 
           null
